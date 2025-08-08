@@ -42,21 +42,19 @@ const Index = () => {
     );
   }
 
-  // Handle different flow states
-  if (flowState === "code_of_conduct") {
-    return <CodeOfConduct onAccept={() => setFlowState("quiz")} />;
-  }
+  // If user is authenticated, handle flow states directly
+  if (user) {
+    if (flowState === "code_of_conduct") {
+      return <CodeOfConduct onAccept={() => setFlowState("quiz")} />;
+    }
 
-  if (flowState === "quiz") {
-    return <ConductQuiz onComplete={() => setFlowState("application")} />;
-  }
+    if (flowState === "quiz") {
+      return <ConductQuiz onComplete={() => setFlowState("application")} />;
+    }
 
-  if (flowState === "application") {
-    return <Profile />;
-  }
-
-  if (flowState === "pending_approval" || flowState === "approved") {
-    return <Profile />;
+    if (flowState === "application" || flowState === "pending_approval" || flowState === "approved") {
+      return <Profile />;
+    }
   }
 
   return (
