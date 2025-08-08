@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import { AuthForm } from "@/components/AuthForm";
 import { CodeOfConduct } from "@/pages/CodeOfConduct";
 import { ConductQuiz } from "@/pages/ConductQuiz";
+import { Profile } from "@/pages/Profile";
 import { useUserFlow } from "@/hooks/useUserFlow";
 import heroBackground from "@/assets/hero-background.jpg";
 import logo from "@/assets/logo.png";
@@ -51,39 +52,11 @@ const Index = () => {
   }
 
   if (flowState === "application") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Application Form</h1>
-          <p className="text-muted-foreground mb-4">Application form will be implemented next</p>
-          <Button onClick={() => supabase.auth.signOut()}>Sign Out</Button>
-        </div>
-      </div>
-    );
+    return <Profile />;
   }
 
-  if (flowState === "pending_approval") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Application Submitted</h1>
-          <p className="text-muted-foreground mb-4">Your application is pending approval</p>
-          <Button onClick={() => supabase.auth.signOut()}>Sign Out</Button>
-        </div>
-      </div>
-    );
-  }
-
-  if (flowState === "approved") {
-    return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Welcome to 62 Crepusculo!</h1>
-          <p className="text-muted-foreground mb-4">You have access to all features</p>
-          <Button onClick={() => supabase.auth.signOut()}>Sign Out</Button>
-        </div>
-      </div>
-    );
+  if (flowState === "pending_approval" || flowState === "approved") {
+    return <Profile />;
   }
 
   return (

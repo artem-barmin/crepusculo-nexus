@@ -35,21 +35,6 @@ export type Database = {
         }
         Relationships: []
       }
-      Interview: {
-        Row: {
-          id: number
-          user_id: string
-        }
-        Insert: {
-          id?: number
-          user_id: string
-        }
-        Update: {
-          id?: number
-          user_id?: string
-        }
-        Relationships: []
-      }
       profiles: {
         Row: {
           birthday: string | null
