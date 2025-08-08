@@ -14,6 +14,27 @@ export type Database = {
   }
   public: {
     Tables: {
+      code_of_conduct_tests: {
+        Row: {
+          answers: Json
+          completed_at: string | null
+          id: string
+          user_id: string
+        }
+        Insert: {
+          answers: Json
+          completed_at?: string | null
+          id?: string
+          user_id: string
+        }
+        Update: {
+          answers?: Json
+          completed_at?: string | null
+          id?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
       Interview: {
         Row: {
           id: number
@@ -29,12 +50,90 @@ export type Database = {
         }
         Relationships: []
       }
+      profiles: {
+        Row: {
+          birthday: string | null
+          created_at: string | null
+          full_name: string | null
+          how_heard_about: string | null
+          id: string
+          introduction: string | null
+          other_events: string | null
+          previous_events: string | null
+          social_media: string[] | null
+          status: string | null
+          updated_at: string | null
+          user_id: string
+          username: string | null
+          why_join: string | null
+        }
+        Insert: {
+          birthday?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          how_heard_about?: string | null
+          id?: string
+          introduction?: string | null
+          other_events?: string | null
+          previous_events?: string | null
+          social_media?: string[] | null
+          status?: string | null
+          updated_at?: string | null
+          user_id: string
+          username?: string | null
+          why_join?: string | null
+        }
+        Update: {
+          birthday?: string | null
+          created_at?: string | null
+          full_name?: string | null
+          how_heard_about?: string | null
+          id?: string
+          introduction?: string | null
+          other_events?: string | null
+          previous_events?: string | null
+          social_media?: string[] | null
+          status?: string | null
+          updated_at?: string | null
+          user_id?: string
+          username?: string | null
+          why_join?: string | null
+        }
+        Relationships: []
+      }
+      user_photos: {
+        Row: {
+          created_at: string | null
+          id: string
+          is_primary: boolean | null
+          photo_url: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          is_primary?: boolean | null
+          photo_url: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          is_primary?: boolean | null
+          photo_url?: string
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      generate_username: {
+        Args: Record<PropertyKey, never>
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
