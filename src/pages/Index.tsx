@@ -11,6 +11,8 @@ import heroBackground from "@/assets/hero-background.jpg";
 import logo from "@/assets/logo.png";
 
 const Index = () => {
+  console.log('Index component is rendering...');
+  
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signup");
