@@ -163,7 +163,7 @@ export function Profile() {
                 }
                 className={`text-xs ${
                   profile.status === 'pending' 
-                    ? 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20 dark:bg-yellow-500/20 dark:text-yellow-400 dark:border-yellow-500/30' 
+                    ? 'bg-yellow-600 text-white border-yellow-600 hover:bg-yellow-700' 
                     : ''
                 }`}
               >
