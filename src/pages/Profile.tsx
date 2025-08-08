@@ -58,7 +58,7 @@ export function Profile() {
           .insert({
             user_id: user.id,
             username: username,
-            status: 'pending'
+            status: 'pending' as const
           })
           .select()
           .single();

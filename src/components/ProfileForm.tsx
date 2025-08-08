@@ -265,7 +265,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
           other_events: data.other_events,
           why_join: data.why_join,
           how_heard_about: data.previous_events === 'no' ? data.how_heard_about : null,
-          status: 'pending'
+          status: 'pending' as const
         })
         .eq('id', profile.id)
         .select()

@@ -46,7 +46,7 @@ export type Database = {
           other_events: string | null
           previous_events: string | null
           social_media: string[] | null
-          status: string | null
+          status: Database["public"]["Enums"]["profile_status"] | null
           updated_at: string | null
           user_id: string
           username: string | null
@@ -62,7 +62,7 @@ export type Database = {
           other_events?: string | null
           previous_events?: string | null
           social_media?: string[] | null
-          status?: string | null
+          status?: Database["public"]["Enums"]["profile_status"] | null
           updated_at?: string | null
           user_id: string
           username?: string | null
@@ -78,7 +78,7 @@ export type Database = {
           other_events?: string | null
           previous_events?: string | null
           social_media?: string[] | null
-          status?: string | null
+          status?: Database["public"]["Enums"]["profile_status"] | null
           updated_at?: string | null
           user_id?: string
           username?: string | null
@@ -121,7 +121,7 @@ export type Database = {
       }
     }
     Enums: {
-      [_ in never]: never
+      profile_status: "pending" | "approved" | "rejected"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -248,6 +248,8 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      profile_status: ["pending", "approved", "rejected"],
+    },
   },
 } as const
