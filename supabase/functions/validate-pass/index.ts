@@ -22,6 +22,9 @@ const supabase = createClient(
 );
 
 serve(async (req: Request) => {
+  console.log('Request method:', req.method);
+  console.log('Request URL:', req.url);
+  
   // Handle CORS preflight requests
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -49,11 +52,13 @@ serve(async (req: Request) => {
         });
       }
 
-      return new Response(generateHTML(errorResponse), {
+      const htmlContent = generateHTML(errorResponse);
+      return new Response(htmlContent, {
         status: 400,
         headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'text/html; charset=utf-8'
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'no-cache',
+          ...corsHeaders
         }
       });
     }
@@ -75,11 +80,13 @@ serve(async (req: Request) => {
         });
       }
 
-      return new Response(generateHTML(errorResponse), {
+      const htmlContent = generateHTML(errorResponse);
+      return new Response(htmlContent, {
         status: 400,
         headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'text/html; charset=utf-8'
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'no-cache',
+          ...corsHeaders
         }
       });
     }
@@ -108,11 +115,13 @@ serve(async (req: Request) => {
         });
       }
 
-      return new Response(generateHTML(errorResponse), {
+      const htmlContent = generateHTML(errorResponse);
+      return new Response(htmlContent, {
         status: 404,
         headers: { 
-          ...corsHeaders, 
-          'Content-Type': 'text/html; charset=utf-8'
+          'Content-Type': 'text/html; charset=utf-8',
+          'Cache-Control': 'no-cache',
+          ...corsHeaders
         }
       });
     }
@@ -162,10 +171,17 @@ serve(async (req: Request) => {
       });
     }
 
-    return new Response(generateHTML(response), {
+    console.log('Returning HTML response for:', profile.username);
+    
+    const htmlContent = generateHTML(response);
+    console.log('Generated HTML length:', htmlContent.length);
+    
+    return new Response(htmlContent, {
+      status: 200,
       headers: { 
-        ...corsHeaders, 
-        'Content-Type': 'text/html; charset=utf-8'
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-cache',
+        ...corsHeaders
       },
     });
 
@@ -188,11 +204,13 @@ serve(async (req: Request) => {
       });
     }
 
-    return new Response(generateHTML(errorResponse), {
+    const htmlContent = generateHTML(errorResponse);
+    return new Response(htmlContent, {
       status: 500,
       headers: { 
-        ...corsHeaders, 
-        'Content-Type': 'text/html; charset=utf-8'
+        'Content-Type': 'text/html; charset=utf-8',
+        'Cache-Control': 'no-cache',
+        ...corsHeaders
       },
     });
   }
