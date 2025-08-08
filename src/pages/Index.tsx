@@ -32,8 +32,24 @@ const Index = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  // Show loading for authenticated users while determining flow state
-  if (loading || (user && loading)) {
+  // Always show loading if user exists or while determining auth state
+  if (loading || user) {
+    // If user is authenticated, handle flow states directly
+    if (user) {
+      if (flowState === "code_of_conduct") {
+        return <CodeOfConduct onAccept={() => setFlowState("quiz")} />;
+      }
+
+      if (flowState === "quiz") {
+        return <ConductQuiz onComplete={() => setFlowState("application")} />;
+      }
+
+      if (flowState === "application" || flowState === "pending_approval" || flowState === "approved") {
+        return <Profile />;
+      }
+    }
+
+    // Show loading spinner
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
@@ -44,20 +60,6 @@ const Index = () => {
     );
   }
 
-  // If user is authenticated, handle flow states directly
-  if (user) {
-    if (flowState === "code_of_conduct") {
-      return <CodeOfConduct onAccept={() => setFlowState("quiz")} />;
-    }
-
-    if (flowState === "quiz") {
-      return <ConductQuiz onComplete={() => setFlowState("application")} />;
-    }
-
-    if (flowState === "application" || flowState === "pending_approval" || flowState === "approved") {
-      return <Profile />;
-    }
-  }
 
   return (
     <div 
