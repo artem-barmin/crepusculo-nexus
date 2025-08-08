@@ -4,6 +4,7 @@ import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS'
 };
 
 interface ValidationResponse {
@@ -50,7 +51,10 @@ serve(async (req: Request) => {
 
       return new Response(generateHTML(errorResponse), {
         status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'text/html' }
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'text/html; charset=utf-8'
+        }
       });
     }
 
@@ -73,7 +77,10 @@ serve(async (req: Request) => {
 
       return new Response(generateHTML(errorResponse), {
         status: 400,
-        headers: { ...corsHeaders, 'Content-Type': 'text/html' }
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'text/html; charset=utf-8'
+        }
       });
     }
 
@@ -103,7 +110,10 @@ serve(async (req: Request) => {
 
       return new Response(generateHTML(errorResponse), {
         status: 404,
-        headers: { ...corsHeaders, 'Content-Type': 'text/html' }
+        headers: { 
+          ...corsHeaders, 
+          'Content-Type': 'text/html; charset=utf-8'
+        }
       });
     }
 
@@ -153,7 +163,10 @@ serve(async (req: Request) => {
     }
 
     return new Response(generateHTML(response), {
-      headers: { ...corsHeaders, 'Content-Type': 'text/html' },
+      headers: { 
+        ...corsHeaders, 
+        'Content-Type': 'text/html; charset=utf-8'
+      },
     });
 
   } catch (error) {
@@ -177,7 +190,10 @@ serve(async (req: Request) => {
 
     return new Response(generateHTML(errorResponse), {
       status: 500,
-      headers: { ...corsHeaders, 'Content-Type': 'text/html' },
+      headers: { 
+        ...corsHeaders, 
+        'Content-Type': 'text/html; charset=utf-8'
+      },
     });
   }
 });
