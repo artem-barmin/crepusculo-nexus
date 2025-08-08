@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
@@ -17,6 +18,15 @@ export function CodeOfConduct({ onAccept }: CodeOfConductProps) {
   return (
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-4xl mx-auto">
+        <div className="flex justify-between items-center mb-8">
+          <h1 className="text-3xl font-bold">Code of Conduct</h1>
+          <Button 
+            variant="outline" 
+            onClick={() => supabase.auth.signOut()}
+          >
+            Sign Out
+          </Button>
+        </div>
         <Card>
           <CardHeader>
             <CardTitle className="text-center text-2xl">Code of Conduct</CardTitle>

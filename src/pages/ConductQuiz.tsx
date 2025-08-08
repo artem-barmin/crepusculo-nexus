@@ -182,12 +182,23 @@ export function ConductQuiz({ onComplete }: ConductQuizProps) {
       <div className="max-w-2xl mx-auto">
         <Card>
           <CardHeader>
-            <CardTitle className="text-center">
-              Code of Conduct Quiz
-            </CardTitle>
-            <p className="text-center text-muted-foreground">
-              Question {currentQuestion + 1} of {questions.length}
-            </p>
+            <div className="flex justify-between items-center">
+              <div className="text-center flex-1">
+                <CardTitle>
+                  Code of Conduct Quiz
+                </CardTitle>
+                <p className="text-muted-foreground">
+                  Question {currentQuestion + 1} of {questions.length}
+                </p>
+              </div>
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={() => supabase.auth.signOut()}
+              >
+                Sign Out
+              </Button>
+            </div>
           </CardHeader>
           <CardContent>
             <div className="space-y-6">
