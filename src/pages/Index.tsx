@@ -3,6 +3,9 @@ import { supabase } from "@/integrations/supabase/client";
 import { User } from "@supabase/supabase-js";
 import { Button } from "@/components/ui/button";
 import { AuthForm } from "@/components/AuthForm";
+import { CodeOfConduct } from "@/pages/CodeOfConduct";
+import { ConductQuiz } from "@/pages/ConductQuiz";
+import { useUserFlow } from "@/hooks/useUserFlow";
 import heroBackground from "@/assets/hero-background.jpg";
 import logo from "@/assets/logo.png";
 
@@ -10,6 +13,7 @@ const Index = () => {
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(false);
   const [authMode, setAuthMode] = useState<"signin" | "signup">("signup");
+  const { flowState, setFlowState, loading } = useUserFlow(user);
 
   useEffect(() => {
     // Get initial session
@@ -27,13 +31,55 @@ const Index = () => {
     return () => subscription.unsubscribe();
   }, []);
 
-  if (user) {
-    // User is logged in - redirect to dashboard (will be implemented later)
+  if (loading) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Welcome back!</h1>
-          <p className="text-muted-foreground mb-4">You are logged in as {user.email}</p>
+          <p className="text-muted-foreground">Loading...</p>
+        </div>
+      </div>
+    );
+  }
+
+  // Handle different flow states
+  if (flowState === "code_of_conduct") {
+    return <CodeOfConduct onAccept={() => setFlowState("quiz")} />;
+  }
+
+  if (flowState === "quiz") {
+    return <ConductQuiz onComplete={() => setFlowState("application")} />;
+  }
+
+  if (flowState === "application") {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Application Form</h1>
+          <p className="text-muted-foreground mb-4">Application form will be implemented next</p>
+          <Button onClick={() => supabase.auth.signOut()}>Sign Out</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (flowState === "pending_approval") {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Application Submitted</h1>
+          <p className="text-muted-foreground mb-4">Your application is pending approval</p>
+          <Button onClick={() => supabase.auth.signOut()}>Sign Out</Button>
+        </div>
+      </div>
+    );
+  }
+
+  if (flowState === "approved") {
+    return (
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-4">Welcome to 62 Crepusculo!</h1>
+          <p className="text-muted-foreground mb-4">You have access to all features</p>
           <Button onClick={() => supabase.auth.signOut()}>Sign Out</Button>
         </div>
       </div>
