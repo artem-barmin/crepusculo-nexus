@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { supabase } from "@/integrations/supabase/client";
@@ -151,8 +152,21 @@ export function Profile() {
             <TabsTrigger 
               value="pass" 
               disabled={profile.status !== 'approved'}
+              className="flex items-center gap-2"
             >
               Your Pass
+              <Badge 
+                variant={
+                  profile.status === 'approved' ? 'default' : 
+                  profile.status === 'rejected' ? 'destructive' : 
+                  'secondary'
+                }
+                className="text-xs"
+              >
+                {profile.status === 'approved' ? 'Approved' : 
+                 profile.status === 'rejected' ? 'Rejected' : 
+                 'Pending'}
+              </Badge>
             </TabsTrigger>
           </TabsList>
           
