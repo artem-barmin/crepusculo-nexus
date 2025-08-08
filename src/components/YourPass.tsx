@@ -22,12 +22,8 @@ interface YourPassProps {
 }
 
 export function YourPass({ profile }: YourPassProps) {
-  const qrData = JSON.stringify({
-    username: profile.username,
-    user_id: profile.user_id,
-    event: "62_crepusculo",
-    timestamp: Date.now()
-  });
+  // Create validation URL for QR code
+  const validationUrl = `https://pnnapdxefbmafisglnfz.supabase.co/functions/v1/validate-pass?user_id=${profile.user_id}&event=62_crepusculo`;
 
   return (
     <Card>
@@ -45,7 +41,7 @@ export function YourPass({ profile }: YourPassProps) {
           <div className="flex justify-center">
             <div className="p-4 bg-white rounded-lg shadow-lg">
               <QRCodeSVG
-                value={qrData}
+                value={validationUrl}
                 size={200}
                 level="M"
                 includeMargin={true}
