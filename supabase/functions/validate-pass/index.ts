@@ -30,38 +30,51 @@ serve(async (req: Request) => {
     const url = new URL(req.url);
     const userId = url.searchParams.get('user_id');
     const event = url.searchParams.get('event');
+    const format = url.searchParams.get('format') || 'html'; // Default to HTML
 
     if (!userId) {
-      return new Response(
-        JSON.stringify({ 
-          error: 'Missing user_id parameter',
-          status: 'invalid',
-          color: 'red',
-          message: 'Invalid QR code - missing user ID',
-          valid: false
-        }),
-        { 
+      const errorResponse = { 
+        error: 'Missing user_id parameter',
+        status: 'invalid',
+        color: 'red',
+        message: 'Invalid QR code - missing user ID',
+        valid: false
+      };
+
+      if (format === 'json') {
+        return new Response(JSON.stringify(errorResponse), { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
+        });
+      }
+
+      return new Response(generateHTML(errorResponse), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'text/html' }
+      });
     }
 
     // Validate event parameter
     if (event !== '62_crepusculo') {
-      return new Response(
-        JSON.stringify({ 
-          error: 'Invalid event',
-          status: 'invalid',
-          color: 'red',
-          message: 'QR code is not for this event',
-          valid: false
-        }),
-        { 
+      const errorResponse = { 
+        error: 'Invalid event',
+        status: 'invalid',
+        color: 'red',
+        message: 'QR code is not for this event',
+        valid: false
+      };
+
+      if (format === 'json') {
+        return new Response(JSON.stringify(errorResponse), { 
           status: 400, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
+        });
+      }
+
+      return new Response(generateHTML(errorResponse), {
+        status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'text/html' }
+      });
     }
 
     // Fetch user profile
@@ -73,19 +86,25 @@ serve(async (req: Request) => {
 
     if (error || !profile) {
       console.error('Error fetching profile:', error);
-      return new Response(
-        JSON.stringify({ 
-          error: 'User not found',
-          status: 'invalid',
-          color: 'red',
-          message: 'Invalid QR code - user not found',
-          valid: false
-        }),
-        { 
+      const errorResponse = { 
+        error: 'User not found',
+        status: 'invalid',
+        color: 'red',
+        message: 'Invalid QR code - user not found',
+        valid: false
+      };
+
+      if (format === 'json') {
+        return new Response(JSON.stringify(errorResponse), { 
           status: 404, 
           headers: { ...corsHeaders, 'Content-Type': 'application/json' } 
-        }
-      );
+        });
+      }
+
+      return new Response(generateHTML(errorResponse), {
+        status: 404,
+        headers: { ...corsHeaders, 'Content-Type': 'text/html' }
+      });
     }
 
     // Determine status color and message
@@ -127,24 +146,183 @@ serve(async (req: Request) => {
 
     console.log(`Pass validation for ${profile.username}: ${profile.status}`);
 
-    return new Response(JSON.stringify(response), {
-      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    if (format === 'json') {
+      return new Response(JSON.stringify(response), {
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+      });
+    }
+
+    return new Response(generateHTML(response), {
+      headers: { ...corsHeaders, 'Content-Type': 'text/html' },
     });
 
   } catch (error) {
     console.error('Error in validate-pass function:', error);
-    return new Response(
-      JSON.stringify({ 
-        error: 'Internal server error',
-        status: 'error',
-        color: 'red',
-        message: 'System error - Please try again',
-        valid: false
-      }),
-      {
+    const errorResponse = { 
+      error: 'Internal server error',
+      status: 'error',
+      color: 'red',
+      message: 'System error - Please try again',
+      valid: false
+    };
+
+    const format = new URL(req.url).searchParams.get('format') || 'html';
+    
+    if (format === 'json') {
+      return new Response(JSON.stringify(errorResponse), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
-      }
-    );
+      });
+    }
+
+    return new Response(generateHTML(errorResponse), {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'text/html' },
+    });
   }
 });
+
+function generateHTML(data: ValidationResponse | any): string {
+  const backgroundColor = getBackgroundColor(data.color);
+  const statusIcon = getStatusIcon(data.color);
+  
+  return `
+    <!DOCTYPE html>
+    <html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <title>62 Crepusculo - Pass Validation</title>
+        <style>
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+            
+            body {
+                font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                min-height: 100vh;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                padding: 20px;
+            }
+            
+            .container {
+                background: white;
+                border-radius: 20px;
+                padding: 40px;
+                box-shadow: 0 20px 60px rgba(0, 0, 0, 0.1);
+                text-align: center;
+                max-width: 500px;
+                width: 100%;
+            }
+            
+            .status-header {
+                background: ${backgroundColor};
+                color: white;
+                padding: 20px;
+                border-radius: 15px;
+                margin-bottom: 30px;
+                font-size: 24px;
+                font-weight: bold;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+            }
+            
+            .icon {
+                font-size: 32px;
+            }
+            
+            .user-info {
+                margin-bottom: 20px;
+            }
+            
+            .user-name {
+                font-size: 28px;
+                font-weight: bold;
+                color: #333;
+                margin-bottom: 5px;
+            }
+            
+            .username {
+                font-size: 18px;
+                color: #666;
+                margin-bottom: 20px;
+            }
+            
+            .message {
+                font-size: 18px;
+                color: #555;
+                line-height: 1.5;
+                margin-bottom: 30px;
+            }
+            
+            .event-info {
+                background: #f8f9fa;
+                padding: 20px;
+                border-radius: 10px;
+                color: #666;
+                font-size: 14px;
+                border-left: 4px solid #667eea;
+            }
+            
+            .timestamp {
+                margin-top: 20px;
+                font-size: 12px;
+                color: #999;
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="status-header">
+                <span class="icon">${statusIcon}</span>
+                <span>${data.valid ? 'VALID PASS' : 'INVALID PASS'}</span>
+            </div>
+            
+            ${data.full_name ? `
+                <div class="user-info">
+                    <div class="user-name">${data.full_name}</div>
+                    <div class="username">@${data.username}</div>
+                </div>
+            ` : ''}
+            
+            <div class="message">${data.message}</div>
+            
+            <div class="event-info">
+                <strong>Event:</strong> 62 Crepusculo<br>
+                <strong>Status:</strong> ${data.status}<br>
+                <strong>Validation Time:</strong> ${new Date().toLocaleString()}
+            </div>
+            
+            <div class="timestamp">
+                Validated at ${new Date().toISOString()}
+            </div>
+        </div>
+    </body>
+    </html>
+  `;
+}
+
+function getBackgroundColor(color: string): string {
+  switch (color) {
+    case 'green': return '#28a745';
+    case 'yellow': return '#ffc107';
+    case 'red': return '#dc3545';
+    default: return '#6c757d';
+  }
+}
+
+function getStatusIcon(color: string): string {
+  switch (color) {
+    case 'green': return '✅';
+    case 'yellow': return '⚠️';
+    case 'red': return '❌';
+    default: return '❓';
+  }
+}
