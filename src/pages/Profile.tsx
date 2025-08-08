@@ -136,7 +136,7 @@ export function Profile() {
           </p>
         </div>
 
-        <Tabs defaultValue="information" className="w-full">
+        <Tabs defaultValue={profile.status === 'approved' ? 'pass' : 'information'} className="w-full">
           <TabsList className="grid w-full grid-cols-2">
             <TabsTrigger value="information">Information</TabsTrigger>
             <TabsTrigger 
