@@ -156,15 +156,13 @@ export function Profile() {
             >
               Your Pass
               <Badge 
-                variant={
-                  profile.status === 'approved' ? 'default' : 
-                  profile.status === 'rejected' ? 'destructive' : 
-                  'outline'
-                }
-                className={`text-xs ${
-                  profile.status === 'pending' 
-                    ? 'bg-yellow-600 text-white border-yellow-600 hover:bg-yellow-700' 
-                    : ''
+                variant="outline"
+                className={`text-xs text-white font-medium ${
+                  profile.status === 'approved' 
+                    ? 'bg-green-600 border-green-600 hover:bg-green-700' 
+                    : profile.status === 'rejected' 
+                    ? 'bg-red-600 border-red-600 hover:bg-red-700' 
+                    : 'bg-yellow-600 border-yellow-600 hover:bg-yellow-700'
                 }`}
               >
                 {profile.status === 'approved' ? 'Approved' : 
