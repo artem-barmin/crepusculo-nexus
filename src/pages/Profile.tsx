@@ -159,9 +159,13 @@ export function Profile() {
                 variant={
                   profile.status === 'approved' ? 'default' : 
                   profile.status === 'rejected' ? 'destructive' : 
-                  'secondary'
+                  'outline'
                 }
-                className="text-xs"
+                className={`text-xs ${
+                  profile.status === 'pending' 
+                    ? 'bg-yellow-500/10 text-yellow-600 border-yellow-500/20 dark:bg-yellow-500/20 dark:text-yellow-400 dark:border-yellow-500/30' 
+                    : ''
+                }`}
               >
                 {profile.status === 'approved' ? 'Approved' : 
                  profile.status === 'rejected' ? 'Rejected' : 
