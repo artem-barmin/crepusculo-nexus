@@ -87,29 +87,31 @@ const Index = () => {
           />
         </div>
 
-        {/* Main description */}
-        <div className="mb-12 max-w-3xl mx-auto">
-          <h1 className="text-2xl md:text-3xl font-light mb-8 leading-relaxed">
-            62 Crepusculo — kink & electronic music event.
-          </h1>
-          <div className="text-lg md:text-xl font-light leading-relaxed space-y-4 text-foreground/90">
-            <p>
-              A space of freedom that takes the metaphorical form of "night therapy".
-            </p>
-            <p>
-              A spotlight on our bodies and minds, their emancipation in a quest for self-exploration...
-            </p>
-            <p>
-              In our spaces, individual freedom does not betray that of others; a foundation that sets the tone for an essential concept within our community: consent, the cornerstone of our policy, values, and aspirations.
-            </p>
-            <p>
-              Let's recreate moments where bodily expression is possible in a climate of total kindness, without taboos or judgment, and where all divisions and their labels are abolished.
-            </p>
-            <p className="text-xl font-medium">
-              Welcome to you.
-            </p>
+        {/* Main description - only show when not in auth mode */}
+        {!showAuth && (
+          <div className="mb-12 max-w-3xl mx-auto">
+            <h1 className="text-2xl md:text-3xl font-light mb-8 leading-relaxed">
+              62 Crepusculo — kink & electronic music event.
+            </h1>
+            <div className="text-lg md:text-xl font-light leading-relaxed space-y-4 text-foreground/90">
+              <p>
+                A space of freedom that takes the metaphorical form of "night therapy".
+              </p>
+              <p>
+                A spotlight on our bodies and minds, their emancipation in a quest for self-exploration...
+              </p>
+              <p>
+                In our spaces, individual freedom does not betray that of others; a foundation that sets the tone for an essential concept within our community: consent, the cornerstone of our policy, values, and aspirations.
+              </p>
+              <p>
+                Let's recreate moments where bodily expression is possible in a climate of total kindness, without taboos or judgment, and where all divisions and their labels are abolished.
+              </p>
+              <p className="text-xl font-medium">
+                Welcome to you.
+              </p>
+            </div>
           </div>
-        </div>
+        )}
 
         {/* Auth section */}
         {!showAuth ? (
