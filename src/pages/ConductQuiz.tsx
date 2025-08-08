@@ -194,7 +194,7 @@ export function ConductQuiz({ onComplete }: ConductQuizProps) {
               <h3 className="text-lg font-medium">{question.question}</h3>
               
               <RadioGroup
-                value={answers[question.id]?.toString()}
+                value={answers[question.id]?.toString() || ""}
                 onValueChange={(value) => handleAnswerChange(question.id, parseInt(value))}
               >
                 {question.options.map((option, index) => (
