@@ -35,6 +35,27 @@ export type Database = {
         }
         Relationships: []
       }
+      name_parts: {
+        Row: {
+          created_at: string
+          id: string
+          type: string
+          word: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          type: string
+          word: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          type?: string
+          word?: string
+        }
+        Relationships: []
+      }
       profiles: {
         Row: {
           birthday: string | null
