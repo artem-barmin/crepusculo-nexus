@@ -2,106 +2,225 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* STYLE.md Implementation - Gasoline Radio inspired dark minimalist design */
 
 @layer base {
   :root {
-    /* Dark theme by default for 62 Crepusculo */
-    --background: 10 2% 10%;
-    --foreground: 0 0% 95%;
+    /* Color tokens from STYLE.md */
+    --bg-base: #000000;
+    --bg-surface1: #0a0a0a;
+    --bg-surface2: #121212;
 
-    --card: 10 2% 12%;
-    --card-foreground: 0 0% 95%;
+    --fg-primary: #ffffff;
+    --fg-secondary: #b3b3b3;
+    --fg-muted: #8a8a8a;
 
-    --popover: 10 2% 12%;
-    --popover-foreground: 0 0% 95%;
+    --border-ui: #262626;
+    --border-strong: #ffffff;
 
-    --primary: 340 75% 50%;
-    --primary-foreground: 0 0% 98%;
+    --btn-hover: #333333;
 
-    --secondary: 10 2% 18%;
-    --secondary-foreground: 0 0% 95%;
+    /* Typography & spacing from STYLE.md */
+    --ff-sans:
+      'Inter', 'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto,
+      'Helvetica Neue', Arial, sans-serif;
+    --fs-dsp: 44px;
+    --fs-xl: 28px;
+    --fs-lg: 22px;
+    --fs-base: 16px;
+    --fs-sm: 14px;
+    --lh-tight: 1.25;
+    --lh-normal: 1.5;
 
-    --muted: 10 2% 15%;
-    --muted-foreground: 0 0% 65%;
+    --sp-xs: 4px;
+    --sp-sm: 8px;
+    --sp-md: 12px;
+    --sp-lg: 16px;
+    --sp-xl: 24px;
+    --sp-xxl: 40px;
 
-    --accent: 340 45% 25%;
-    --accent-foreground: 0 0% 95%;
+    /* Tailwind compatibility - map to STYLE.md colors */
+    --background: 0 0% 0%; /* #000000 */
+    --foreground: 0 0% 100%; /* #ffffff */
+
+    --card: 0 0% 4%; /* #0a0a0a */
+    --card-foreground: 0 0% 100%;
+
+    --popover: 0 0% 4%;
+    --popover-foreground: 0 0% 100%;
+
+    --primary: 0 0% 0%; /* Black buttons */
+    --primary-foreground: 0 0% 100%;
+
+    --secondary: 0 0% 7%; /* #121212 */
+    --secondary-foreground: 0 0% 100%;
+
+    --muted: 0 0% 4%;
+    --muted-foreground: 0 0% 54%; /* #8a8a8a */
+
+    --accent: 0 0% 7%;
+    --accent-foreground: 0 0% 100%;
 
     --destructive: 0 84% 60%;
-    --destructive-foreground: 0 0% 98%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 10 2% 20%;
-    --input: 10 2% 20%;
-    --ring: 340 75% 50%;
+    --border: 0 0% 15%; /* #262626 */
+    --input: 0 0% 15%;
+    --ring: 0 0% 100%; /* White focus rings */
 
-    --radius: 0.5rem;
+    --radius: 0px; /* Square corners only */
 
-    --sidebar-background: 0 0% 98%;
-
-    --sidebar-foreground: 240 5.3% 26.1%;
-
-    --sidebar-primary: 240 5.9% 10%;
-
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    color-scheme: dark;
   }
 
-  .dark {
-    /* Enhanced dark theme */
-    --background: 5 5% 8%;
-    --foreground: 0 0% 98%;
-
-    --card: 5 5% 10%;
-    --card-foreground: 0 0% 98%;
-
-    --popover: 5 5% 10%;
-    --popover-foreground: 0 0% 98%;
-
-    --primary: 340 85% 55%;
-    --primary-foreground: 0 0% 98%;
-
-    --secondary: 5 5% 15%;
-    --secondary-foreground: 0 0% 98%;
-
-    --muted: 5 5% 12%;
-    --muted-foreground: 0 0% 70%;
-
-    --accent: 340 55% 30%;
-    --accent-foreground: 0 0% 98%;
-
-    --destructive: 0 70% 50%;
-    --destructive-foreground: 0 0% 98%;
-
-    --border: 5 5% 18%;
-    --input: 5 5% 18%;
-    --ring: 340 85% 55%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
-    --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+  html,
+  body {
+    background: var(--bg-base);
+    color: var(--fg-primary);
+    font-family: var(--ff-sans);
+    line-height: var(--lh-normal);
+    font-size: var(--fs-base);
   }
-}
 
-@layer base {
   * {
     @apply border-border;
+    border-radius: 0 !important; /* Force square corners everywhere */
   }
 
   body {
     @apply bg-background text-foreground;
+  }
+
+  /* Typography scale */
+  h1 {
+    font-size: var(--fs-dsp);
+    line-height: var(--lh-tight);
+    font-weight: 600;
+  }
+  h2 {
+    font-size: var(--fs-xl);
+    line-height: var(--lh-tight);
+    font-weight: 600;
+  }
+  h3 {
+    font-size: var(--fs-lg);
+    line-height: var(--lh-tight);
+    font-weight: 600;
+  }
+  h4,
+  h5,
+  h6 {
+    font-size: var(--fs-base);
+    line-height: var(--lh-tight);
+    font-weight: 500;
+  }
+
+  /* Links */
+  a {
+    color: var(--fg-primary);
+    text-decoration: none;
+    transition: text-decoration 0.15s ease-out;
+  }
+  a:hover,
+  a:focus {
+    text-decoration: underline;
+  }
+
+  /* Focus styles for accessibility */
+  *:focus-visible {
+    outline: 2px solid var(--border-strong);
+    outline-offset: 2px;
+  }
+}
+
+/* Component styles from STYLE.md */
+@layer components {
+  .button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    height: 42px;
+    padding: 10px 16px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-base);
+    color: var(--fg-primary);
+    text-transform: uppercase;
+    letter-spacing: 0.02em;
+    font-weight: 600;
+    user-select: none;
+    cursor: pointer;
+    border-radius: 0;
+    transition:
+      background-color 0.15s ease-out,
+      border-color 0.15s ease-out,
+      color 0.15s ease-out;
+  }
+
+  .button:hover {
+    background: var(--btn-hover);
+  }
+
+  .button:active {
+    background: #2a2a2a;
+  }
+
+  .button:focus-visible {
+    outline: 2px solid var(--border-strong);
+    outline-offset: 2px;
+  }
+
+  .button[disabled],
+  .button[aria-disabled='true'] {
+    background: var(--bg-surface1);
+    color: var(--fg-muted);
+    border-color: var(--border-ui);
+    cursor: not-allowed;
+  }
+
+  .input,
+  .select,
+  .textarea {
+    width: 100%;
+    height: 42px;
+    padding: 10px 12px;
+    background: var(--bg-surface1);
+    color: var(--fg-primary);
+    border: 1px solid var(--border-ui);
+    border-radius: 0;
+    outline: none;
+    transition:
+      border-color 0.15s ease-out,
+      background-color 0.15s ease-out;
+  }
+
+  .input::placeholder,
+  .textarea::placeholder {
+    color: var(--fg-muted);
+  }
+
+  .input:focus,
+  .select:focus,
+  .textarea:focus {
+    border-color: var(--border-strong);
+    outline: 2px solid var(--border-strong);
+    outline-offset: 2px;
+  }
+
+  .textarea {
+    height: auto;
+    min-height: 120px;
+    resize: vertical;
+  }
+
+  .card {
+    background: var(--bg-surface1);
+    border: 1px solid var(--border-ui);
+    padding: var(--sp-xl);
+    border-radius: 0;
+  }
+
+  .card--interactive:hover {
+    background: var(--bg-surface2);
   }
 }

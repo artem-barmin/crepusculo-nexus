@@ -1,42 +1,52 @@
+/* App-specific styles following STYLE.md guidelines */
+
 #root {
-  max-width: 1280px;
+  max-width: 1280px; /* Container max-width from STYLE.md */
   margin: 0 auto;
-  padding: 2rem;
-  text-align: center;
+  padding: 24px; /* Side padding from STYLE.md */
+  text-align: left; /* Content-first, not centered */
 }
 
+/* Remove any conflicting logo animations and effects */
 .logo {
   height: 6em;
   padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+  /* Removed filter transitions - keeping minimal per STYLE.md */
 }
+
+/* Remove logo animations - minimal motion per STYLE.md */
 .logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+  /* No hover effects - keeping minimal */
 }
+
 .logo.react:hover {
-  filter: drop-shadow(0 0 2em #61dafbaa);
+  /* No hover effects - keeping minimal */
 }
 
-@keyframes logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
-}
+/* Remove keyframe animations - minimal motion per STYLE.md */
 
-@media (prefers-reduced-motion: no-preference) {
-  a:nth-of-type(2) .logo {
-    animation: logo-spin infinite 20s linear;
-  }
-}
-
+/* Card styling should use the component classes */
 .card {
-  padding: 2em;
+  /* Removed padding - handled by component */
 }
 
+/* Muted text using STYLE.md colors */
 .read-the-docs {
-  color: #888;
+  color: var(--fg-muted);
+}
+
+/* Layout helpers following STYLE.md */
+.container {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+.section-spacing {
+  margin: 64px 0; /* Vertical rhythm from STYLE.md */
+}
+
+.divider {
+  border-top: 1px solid var(--border-ui);
+  margin: 40px 0;
 }
