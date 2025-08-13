@@ -3,9 +3,23 @@ import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
 import { Button } from "@/components/ui/button";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import {
+  Form,
+  FormControl,
+  FormDescription,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "@/hooks/use-toast";
 
@@ -16,10 +30,14 @@ const signInSchema = z.object({
 
 const signUpSchema = z.object({
   email: z.string().email("Please enter a valid email address"),
-  password: z.string()
+  password: z
+    .string()
     .min(8, "Password must be at least 8 characters")
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
-    .regex(/[!@#$%^&*(),.?":{}|<>]/, "Password must contain at least one special character"),
+    .regex(
+      /[!@#$%^&*(),.?":{}|<>]/,
+      "Password must contain at least one special character"
+    ),
 });
 
 type SignInFormData = z.infer<typeof signInSchema>;
@@ -111,16 +129,18 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
           {mode === "signin" ? "Sign In" : "Join 62 Crepusculo"}
         </CardTitle>
         <CardDescription className="text-center">
-          {mode === "signin" 
-            ? "Welcome back to the community" 
-            : "Begin your journey with us"
-          }
+          {mode === "signin"
+            ? "Welcome back to the community"
+            : "Begin your journey with us"}
         </CardDescription>
       </CardHeader>
       <CardContent>
         {mode === "signin" ? (
           <Form {...signInForm}>
-            <form onSubmit={signInForm.handleSubmit(handleSignIn)} className="space-y-4">
+            <form
+              onSubmit={signInForm.handleSubmit(handleSignIn)}
+              className="space-y-4"
+            >
               <FormField
                 control={signInForm.control}
                 name="email"
@@ -154,7 +174,10 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
           </Form>
         ) : (
           <Form {...signUpForm}>
-            <form onSubmit={signUpForm.handleSubmit(handleSignUp)} className="space-y-4">
+            <form
+              onSubmit={signUpForm.handleSubmit(handleSignUp)}
+              className="space-y-4"
+            >
               <FormField
                 control={signUpForm.control}
                 name="email"
@@ -177,6 +200,10 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
                     <FormControl>
                       <Input {...field} type="password" />
                     </FormControl>
+                    <FormDescription>
+                      Password must be at least 8 characters long and contain at
+                      least one uppercase letter and one special character.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -193,10 +220,9 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
             onClick={onToggleMode}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            {mode === "signin" 
-              ? "Don't have an account? Sign up" 
-              : "Already have an account? Sign in"
-            }
+            {mode === "signin"
+              ? "Don't have an account? Sign up"
+              : "Already have an account? Sign in"}
           </button>
         </div>
       </CardContent>

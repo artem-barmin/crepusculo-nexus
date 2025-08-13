@@ -1,0 +1,17 @@
+{
+  "name": "Crepusculo Nexus Dev Container",
+  "image": "mcr.microsoft.com/playwright:v1.54.0-noble",
+  "customizations": {
+    "vscode": {
+      "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "bradlc.vscode-tailwindcss",
+        "ms-playwright.playwright"
+      ]
+    }
+  },
+  "forwardPorts": [5173],
+  "postCreateCommand": "npm install",
+  "remoteUser": "pwuser"
+}
