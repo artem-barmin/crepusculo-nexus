@@ -44,7 +44,10 @@ export function useUserFlow(user: User | null) {
           setFlowState('application');
         } else if (profileData.status === 'pending') {
           setFlowState('pending_approval');
-        } else if (profileData.status === 'approved') {
+        } else if (
+          profileData.status === 'approved' ||
+          profileData.status === 'approved_plus'
+        ) {
           setFlowState('approved');
         } else {
           setFlowState('application');

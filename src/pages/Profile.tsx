@@ -178,7 +178,11 @@ export function Profile() {
         </div>
 
         <Tabs
-          defaultValue={profile.status === 'approved' ? 'pass' : 'information'}
+          defaultValue={
+            profile.status === 'approved' || profile.status === 'approved_plus'
+              ? 'pass'
+              : 'information'
+          }
           className="w-full"
         >
           <TabsList className="grid w-full grid-cols-3">
@@ -186,7 +190,10 @@ export function Profile() {
             <TabsTrigger value="conduct">Code of Conduct</TabsTrigger>
             <TabsTrigger
               value="pass"
-              disabled={profile.status !== 'approved'}
+              disabled={
+                profile.status !== 'approved' &&
+                profile.status !== 'approved_plus'
+              }
               className="flex items-center gap-2"
             >
               Your Pass
@@ -195,16 +202,20 @@ export function Profile() {
                 className={`text-xs text-white font-medium ${
                   profile.status === 'approved'
                     ? 'bg-green-600 border-green-600 hover:bg-green-700'
-                    : profile.status === 'rejected'
-                      ? 'bg-red-600 border-red-600 hover:bg-red-700'
-                      : 'bg-yellow-600 border-yellow-600 hover:bg-yellow-700'
+                    : profile.status === 'approved_plus'
+                      ? 'bg-purple-600 border-purple-600 hover:bg-purple-700'
+                      : profile.status === 'rejected'
+                        ? 'bg-red-600 border-red-600 hover:bg-red-700'
+                        : 'bg-yellow-600 border-yellow-600 hover:bg-yellow-700'
                 }`}
               >
                 {profile.status === 'approved'
-                  ? 'Approved'
-                  : profile.status === 'rejected'
-                    ? 'Rejected'
-                    : 'Pending'}
+                  ? '62 verified'
+                  : profile.status === 'approved_plus'
+                    ? '62 + Goosebumps verified'
+                    : profile.status === 'rejected'
+                      ? 'Rejected'
+                      : 'Pending'}
               </Badge>
             </TabsTrigger>
           </TabsList>
@@ -295,7 +306,8 @@ export function Profile() {
           </TabsContent>
 
           <TabsContent value="pass" className="mt-6">
-            {profile.status === 'approved' ? (
+            {profile.status === 'approved' ||
+            profile.status === 'approved_plus' ? (
               <YourPass profile={profile} />
             ) : (
               <Card>

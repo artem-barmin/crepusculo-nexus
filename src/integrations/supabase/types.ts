@@ -118,7 +118,7 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
-      profile_status: 'pending' | 'approved' | 'rejected';
+      profile_status: 'pending' | 'approved' | 'rejected' | 'approved_plus';
     };
     CompositeTypes: {
       [_ in never]: never;
@@ -249,7 +249,7 @@ export type CompositeTypes<
 export const Constants = {
   public: {
     Enums: {
-      profile_status: ['pending', 'approved', 'rejected'],
+      profile_status: ['pending', 'approved', 'rejected', 'approved_plus'],
     },
   },
 } as const;

@@ -30,8 +30,17 @@ export function YourPass({ profile }: YourPassProps) {
       <CardHeader>
         <CardTitle className="text-center">Your 62 Crepusculo Pass</CardTitle>
         <div className="flex justify-center">
-          <Badge variant="secondary" className="bg-green-100 text-green-800">
-            Approved
+          <Badge
+            variant="secondary"
+            className={
+              profile.status === 'approved_plus'
+                ? 'bg-purple-100 text-purple-800'
+                : 'bg-green-100 text-green-800'
+            }
+          >
+            {profile.status === 'approved_plus'
+              ? '62 + Goosebumps verified'
+              : '62 verified'}
           </Badge>
         </div>
       </CardHeader>
