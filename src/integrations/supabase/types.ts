@@ -35,27 +35,6 @@ export type Database = {
         };
         Relationships: [];
       };
-      name_parts: {
-        Row: {
-          created_at: string;
-          id: string;
-          type: string;
-          word: string;
-        };
-        Insert: {
-          created_at?: string;
-          id?: string;
-          type: string;
-          word: string;
-        };
-        Update: {
-          created_at?: string;
-          id?: string;
-          type?: string;
-          word?: string;
-        };
-        Relationships: [];
-      };
       profiles: {
         Row: {
           birthday: string | null;
@@ -136,10 +115,7 @@ export type Database = {
       [_ in never]: never;
     };
     Functions: {
-      generate_username: {
-        Args: Record<PropertyKey, never>;
-        Returns: string;
-      };
+      [_ in never]: never;
     };
     Enums: {
       profile_status: 'pending' | 'approved' | 'rejected';

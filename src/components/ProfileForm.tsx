@@ -21,6 +21,14 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
 const profileSchema = z.object({
+  username: z
+    .string()
+    .min(3, 'Username must be at least 3 characters')
+    .max(30, 'Username must be at most 30 characters')
+    .regex(
+      /^[a-zA-Z0-9._-]+$/,
+      'Username can only contain letters, numbers, dots, hyphens, and underscores'
+    ),
   full_name: z.string().min(2, 'Full name must be at least 2 characters'),
   birthday: z.string().refine((date) => {
     const birthDate = new Date(date);
@@ -96,6 +104,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
   } = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
+      username: profile.username || '',
       full_name: profile.full_name || '',
       birthday: profile.birthday || '',
       social_media: profile.social_media || [''],
@@ -284,6 +293,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
       const { data: updatedProfile, error } = await supabase
         .from('profiles')
         .update({
+          username: data.username,
           full_name: data.full_name,
           birthday: data.birthday,
           social_media: data.social_media,
@@ -332,17 +342,22 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Username (read-only) */}
+          {/* Username (editable) */}
           <div>
-            <Label htmlFor="username">Username</Label>
+            <Label htmlFor="username">Username *</Label>
             <Input
               id="username"
-              value={profile.username || ''}
-              disabled
-              className="bg-muted"
+              {...register('username')}
+              placeholder="Enter your username"
             />
+            {errors.username && (
+              <p className="text-destructive text-sm mt-1">
+                {errors.username.message}
+              </p>
+            )}
             <p className="text-xs text-muted-foreground mt-1">
-              Your username is automatically generated and cannot be changed
+              Your username can contain letters, numbers, dots, hyphens, and
+              underscores
             </p>
           </div>
 

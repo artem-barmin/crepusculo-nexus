@@ -55,7 +55,7 @@ export function Profile() {
 
       if (!data) {
         // Create initial profile if it doesn't exist
-        const username = await generateUsername();
+        const username = await generateUsernameFromEmail(user.email || '');
         const { data: newProfile, error: insertError } = await supabase
           .from('profiles')
           .insert({
@@ -90,13 +90,40 @@ export function Profile() {
     }
   };
 
-  const generateUsername = async (): Promise<string> => {
-    const { data, error } = await supabase.rpc('generate_username');
-    if (error) {
-      console.error('Error generating username:', error);
-      return `user${Date.now()}`;
+  const generateUsernameFromEmail = async (email: string): Promise<string> => {
+    // Extract the part before @ from email
+    const emailPrefix = email.split('@')[0];
+    let username = emailPrefix;
+    let counter = 1;
+
+    // Check if username already exists in database
+    while (true) {
+      const { data, error } = await supabase
+        .from('profiles')
+        .select('username')
+        .eq('username', username)
+        .maybeSingle();
+
+      if (error) {
+        console.error('Error checking username:', error);
+        // If there's an error, return the original username with timestamp as fallback
+        return `${emailPrefix}_${Date.now()}`;
+      }
+
+      // If no existing username found, we can use this one
+      if (!data) {
+        return username;
+      }
+
+      // Username exists, try with counter
+      username = `${emailPrefix}_${counter}`;
+      counter++;
+
+      // Safety check to prevent infinite loop
+      if (counter > 1000) {
+        return `${emailPrefix}_${Date.now()}`;
+      }
     }
-    return data || `user${Date.now()}`;
   };
 
   if (loading) {
