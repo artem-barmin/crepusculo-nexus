@@ -1,6 +1,6 @@
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Badge } from "@/components/ui/badge";
-import { QRCodeSVG } from "qrcode.react";
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Badge } from '@/components/ui/badge';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface Profile {
   id: string;
@@ -70,8 +70,8 @@ export function YourPass({ profile }: YourPassProps) {
           <div className="bg-muted rounded-lg p-4 text-sm">
             <h4 className="font-medium mb-2">Event Guidelines:</h4>
             <p className="text-muted-foreground">
-              Remember to follow the Code of Conduct at all times. 
-              Your pass is personal and non-transferable.
+              Remember to follow the Code of Conduct at all times. Your pass is
+              personal and non-transferable.
             </p>
           </div>
         </div>

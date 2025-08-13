@@ -1,21 +1,21 @@
-import { useState, useEffect } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import { User } from "@supabase/supabase-js";
-import { Button } from "@/components/ui/button";
-import { AuthForm } from "@/components/AuthForm";
-import { CodeOfConduct } from "@/pages/CodeOfConduct";
-import { ConductQuiz } from "@/pages/ConductQuiz";
-import { Profile } from "@/pages/Profile";
-import { useUserFlow } from "@/hooks/useUserFlow";
-import heroBackground from "@/assets/hero-background.jpg";
-import logo from "@/assets/logo.png";
+import { useState, useEffect } from 'react';
+import { supabase } from '@/integrations/supabase/client';
+import { User } from '@supabase/supabase-js';
+import { Button } from '@/components/ui/button';
+import { AuthForm } from '@/components/AuthForm';
+import { CodeOfConduct } from '@/pages/CodeOfConduct';
+import { ConductQuiz } from '@/pages/ConductQuiz';
+import { Profile } from '@/pages/Profile';
+import { useUserFlow } from '@/hooks/useUserFlow';
+import heroBackground from '@/assets/hero-background.jpg';
+import logo from '@/assets/logo.png';
 
 const Index = () => {
   console.log('Index component is rendering...');
-  
+
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(false);
-  const [authMode, setAuthMode] = useState<"signin" | "signup">("signup");
+  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup');
   const { flowState, setFlowState, loading } = useUserFlow(user);
 
   useEffect(() => {
@@ -25,11 +25,11 @@ const Index = () => {
     });
 
     // Listen for auth changes
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        setUser(session?.user ?? null);
-      }
-    );
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event, session) => {
+      setUser(session?.user ?? null);
+    });
 
     return () => subscription.unsubscribe();
   }, []);
@@ -38,15 +38,19 @@ const Index = () => {
   if (loading || user) {
     // If user is authenticated, handle flow states directly
     if (user) {
-      if (flowState === "code_of_conduct") {
-        return <CodeOfConduct onAccept={() => setFlowState("quiz")} />;
+      if (flowState === 'code_of_conduct') {
+        return <CodeOfConduct onAccept={() => setFlowState('quiz')} />;
       }
 
-      if (flowState === "quiz") {
-        return <ConductQuiz onComplete={() => setFlowState("application")} />;
+      if (flowState === 'quiz') {
+        return <ConductQuiz onComplete={() => setFlowState('application')} />;
       }
 
-      if (flowState === "application" || flowState === "pending_approval" || flowState === "approved") {
+      if (
+        flowState === 'application' ||
+        flowState === 'pending_approval' ||
+        flowState === 'approved'
+      ) {
         return <Profile />;
       }
     }
@@ -62,11 +66,10 @@ const Index = () => {
     );
   }
 
-
   // Show auth form centered on page
   if (showAuth) {
     return (
-      <div 
+      <div
         className="min-h-screen relative flex items-center justify-center bg-background"
         style={{
           backgroundImage: `url(${heroBackground})`,
@@ -77,24 +80,26 @@ const Index = () => {
       >
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/60" />
-        
+
         {/* Centered content */}
         <div className="relative z-10 w-full max-w-md px-4">
           {/* Logo */}
           <div className="mb-8 text-center">
-            <img 
-              src={logo} 
-              alt="62 Crepusculo" 
+            <img
+              src={logo}
+              alt="62 Crepusculo"
               className="mx-auto h-16 w-auto mb-6"
             />
           </div>
 
           {/* Auth Form */}
-          <AuthForm 
-            mode={authMode} 
-            onToggleMode={() => setAuthMode(authMode === "signin" ? "signup" : "signin")}
+          <AuthForm
+            mode={authMode}
+            onToggleMode={() =>
+              setAuthMode(authMode === 'signin' ? 'signup' : 'signin')
+            }
           />
-          
+
           {/* Back button */}
           <div className="mt-6 text-center">
             <button
@@ -110,7 +115,7 @@ const Index = () => {
   }
 
   return (
-    <div 
+    <div
       className="min-h-screen relative flex flex-col items-center justify-center bg-background"
       style={{
         backgroundImage: `url(${heroBackground})`,
@@ -121,16 +126,12 @@ const Index = () => {
     >
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/60" />
-      
+
       {/* Content */}
       <div className="relative z-10 w-full max-w-4xl mx-auto px-4 text-center">
         {/* Logo */}
         <div className="mb-8">
-          <img 
-            src={logo} 
-            alt="62 Crepusculo" 
-            className="mx-auto h-20 w-auto"
-          />
+          <img src={logo} alt="62 Crepusculo" className="mx-auto h-20 w-auto" />
         </div>
 
         {/* Main description - only show when not in auth mode */}
@@ -140,29 +141,34 @@ const Index = () => {
           </h1>
           <div className="text-lg md:text-xl font-light leading-relaxed space-y-4 text-foreground/90">
             <p>
-              A space of freedom that takes the metaphorical form of "night therapy".
+              A space of freedom that takes the metaphorical form of "night
+              therapy".
             </p>
             <p>
-              A spotlight on our bodies and minds, their emancipation in a quest for self-exploration...
+              A spotlight on our bodies and minds, their emancipation in a quest
+              for self-exploration...
             </p>
             <p>
-              In our spaces, individual freedom does not betray that of others; a foundation that sets the tone for an essential concept within our community: consent, the cornerstone of our policy, values, and aspirations.
+              In our spaces, individual freedom does not betray that of others;
+              a foundation that sets the tone for an essential concept within
+              our community: consent, the cornerstone of our policy, values, and
+              aspirations.
             </p>
             <p>
-              Let's recreate moments where bodily expression is possible in a climate of total kindness, without taboos or judgment, and where all divisions and their labels are abolished.
+              Let's recreate moments where bodily expression is possible in a
+              climate of total kindness, without taboos or judgment, and where
+              all divisions and their labels are abolished.
             </p>
-            <p className="text-xl font-medium">
-              Welcome to you.
-            </p>
+            <p className="text-xl font-medium">Welcome to you.</p>
           </div>
         </div>
 
         {/* Auth buttons */}
         <div className="space-y-4">
-          <Button 
-            size="lg" 
+          <Button
+            size="lg"
             onClick={() => {
-              setAuthMode("signup");
+              setAuthMode('signup');
               setShowAuth(true);
             }}
             className="text-lg px-8 py-3"
@@ -172,7 +178,7 @@ const Index = () => {
           <div>
             <button
               onClick={() => {
-                setAuthMode("signin");
+                setAuthMode('signin');
                 setShowAuth(true);
               }}
               className="text-muted-foreground hover:text-foreground transition-colors underline"

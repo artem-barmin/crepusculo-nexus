@@ -1,10 +1,11 @@
-import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
-import { createClient } from "https://esm.sh/@supabase/supabase-js@2";
+import { serve } from 'https://deno.land/std@0.168.0/http/server.ts';
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
-  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
-  'Access-Control-Allow-Methods': 'GET, OPTIONS'
+  'Access-Control-Allow-Headers':
+    'authorization, x-client-info, apikey, content-type',
+  'Access-Control-Allow-Methods': 'GET, OPTIONS',
 };
 
 interface ValidationResponse {
@@ -33,24 +34,24 @@ serve(async (req: Request) => {
     const event = url.searchParams.get('event');
 
     if (!userId) {
-      return new Response(
-        'ERROR\nInvalid QR Code\nMissing user ID',
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' } 
-        }
-      );
+      return new Response('ERROR\nInvalid QR Code\nMissing user ID', {
+        status: 400,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'text/plain; charset=utf-8',
+        },
+      });
     }
 
     // Validate event parameter
     if (event !== '62_crepusculo') {
-      return new Response(
-        'ERROR\nInvalid Event\nWrong QR code',
-        { 
-          status: 400, 
-          headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' } 
-        }
-      );
+      return new Response('ERROR\nInvalid Event\nWrong QR code', {
+        status: 400,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'text/plain; charset=utf-8',
+        },
+      });
     }
 
     // Fetch user profile
@@ -62,13 +63,13 @@ serve(async (req: Request) => {
 
     if (error || !profile) {
       console.error('Error fetching profile:', error);
-      return new Response(
-        'ERROR\nUser Not Found\nInvalid QR code',
-        { 
-          status: 404, 
-          headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' } 
-        }
-      );
+      return new Response('ERROR\nUser Not Found\nInvalid QR code', {
+        status: 404,
+        headers: {
+          ...corsHeaders,
+          'Content-Type': 'text/plain; charset=utf-8',
+        },
+      });
     }
 
     console.log(`Pass validation for ${profile.username}: ${profile.status}`);
@@ -79,15 +80,11 @@ serve(async (req: Request) => {
     return new Response(response, {
       headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' },
     });
-
   } catch (error) {
     console.error('Error in validate-pass function:', error);
-    return new Response(
-      'ERROR\nSystem Error\nPlease try again',
-      {
-        status: 500,
-        headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' },
-      }
-    );
+    return new Response('ERROR\nSystem Error\nPlease try again', {
+      status: 500,
+      headers: { ...corsHeaders, 'Content-Type': 'text/plain; charset=utf-8' },
+    });
   }
 });

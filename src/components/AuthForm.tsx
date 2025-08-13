@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -7,11 +7,11 @@ import {
   AlertDialogFooter,
   AlertDialogHeader,
   AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import * as z from "zod";
-import { Button } from "@/components/ui/button";
+} from '@/components/ui/alert-dialog';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
+import * as z from 'zod';
+import { Button } from '@/components/ui/button';
 import {
   Form,
   FormControl,
@@ -20,32 +20,32 @@ import {
   FormItem,
   FormLabel,
   FormMessage,
-} from "@/components/ui/form";
-import { Input } from "@/components/ui/input";
+} from '@/components/ui/form';
+import { Input } from '@/components/ui/input';
 import {
   Card,
   CardContent,
   CardDescription,
   CardHeader,
   CardTitle,
-} from "@/components/ui/card";
-import { supabase } from "@/integrations/supabase/client";
-import { toast } from "@/hooks/use-toast";
+} from '@/components/ui/card';
+import { supabase } from '@/integrations/supabase/client';
+import { toast } from '@/hooks/use-toast';
 
 const signInSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
-  password: z.string().min(1, "Password is required"),
+  email: z.string().email('Please enter a valid email address'),
+  password: z.string().min(1, 'Password is required'),
 });
 
 const signUpSchema = z.object({
-  email: z.string().email("Please enter a valid email address"),
+  email: z.string().email('Please enter a valid email address'),
   password: z
     .string()
-    .min(8, "Password must be at least 8 characters")
-    .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
+    .min(8, 'Password must be at least 8 characters')
+    .regex(/[A-Z]/, 'Password must contain at least one uppercase letter')
     .regex(
       /[!@#$%^&*(),.?":{}|<>]/,
-      "Password must contain at least one special character"
+      'Password must contain at least one special character'
     ),
 });
 
@@ -53,7 +53,7 @@ type SignInFormData = z.infer<typeof signInSchema>;
 type SignUpFormData = z.infer<typeof signUpSchema>;
 
 interface AuthFormProps {
-  mode: "signin" | "signup";
+  mode: 'signin' | 'signup';
   onToggleMode: () => void;
 }
 
@@ -63,12 +63,12 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
 
   const signInForm = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: '', password: '' },
   });
 
   const signUpForm = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
-    defaultValues: { email: "", password: "" },
+    defaultValues: { email: '', password: '' },
   });
 
   const handleSignIn = async (data: SignInFormData) => {
@@ -81,16 +81,16 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
 
       if (error) {
         toast({
-          title: "Error",
+          title: 'Error',
           description: error.message,
-          variant: "destructive",
+          variant: 'destructive',
         });
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
+        title: 'Error',
+        description: 'An unexpected error occurred',
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -111,18 +111,18 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
 
       if (error) {
         toast({
-          title: "Error",
+          title: 'Error',
           description: error.message,
-          variant: "destructive",
+          variant: 'destructive',
         });
       } else {
         setIsAlertOpen(true);
       }
     } catch (error) {
       toast({
-        title: "Error",
-        description: "An unexpected error occurred",
-        variant: "destructive",
+        title: 'Error',
+        description: 'An unexpected error occurred',
+        variant: 'destructive',
       });
     } finally {
       setLoading(false);
@@ -133,16 +133,16 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
     <Card className="w-full max-w-md bg-card/80 backdrop-blur-sm border-border/50">
       <CardHeader>
         <CardTitle className="text-center">
-          {mode === "signin" ? "Sign In" : "Join 62 Crepusculo"}
+          {mode === 'signin' ? 'Sign In' : 'Join 62 Crepusculo'}
         </CardTitle>
         <CardDescription className="text-center">
-          {mode === "signin"
-            ? "Welcome back to the community"
-            : "Begin your journey with us"}
+          {mode === 'signin'
+            ? 'Welcome back to the community'
+            : 'Begin your journey with us'}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {mode === "signin" ? (
+        {mode === 'signin' ? (
           <Form {...signInForm}>
             <form
               onSubmit={signInForm.handleSubmit(handleSignIn)}
@@ -175,7 +175,7 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
                 )}
               />
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Signing in..." : "Sign In"}
+                {loading ? 'Signing in...' : 'Sign In'}
               </Button>
             </form>
           </Form>
@@ -216,7 +216,7 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
                 )}
               />
               <Button type="submit" className="w-full" disabled={loading}>
-                {loading ? "Creating account..." : "Sign Up"}
+                {loading ? 'Creating account...' : 'Sign Up'}
               </Button>
             </form>
           </Form>
@@ -227,9 +227,9 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
             onClick={onToggleMode}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors"
           >
-            {mode === "signin"
+            {mode === 'signin'
               ? "Don't have an account? Sign up"
-              : "Already have an account? Sign in"}
+              : 'Already have an account? Sign in'}
           </button>
         </div>
       </CardContent>
