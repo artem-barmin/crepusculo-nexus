@@ -14,6 +14,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select';
+import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Badge } from '@/components/ui/badge';
 import { X, Upload, User } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
@@ -202,10 +203,11 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
         title: 'Photo uploaded',
         description: 'Your photo has been uploaded successfully',
       });
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Upload failed',
-        description: error.message,
+        description:
+          error instanceof Error ? error.message : 'An unknown error occurred',
         variant: 'destructive',
       });
     } finally {
@@ -307,10 +309,11 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
         title: 'Profile updated',
         description: 'Your profile has been submitted for approval',
       });
-    } catch (error: any) {
+    } catch (error) {
       toast({
         title: 'Error',
-        description: error.message,
+        description:
+          error instanceof Error ? error.message : 'An unknown error occurred',
         variant: 'destructive',
       });
     } finally {
@@ -423,11 +426,16 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
               {photos.map((photo) => (
                 <div key={photo.id} className="relative group">
-                  <img
-                    src={photo.photo_url}
-                    alt="Profile"
-                    className="w-full h-32 object-cover rounded-lg"
-                  />
+                  <AspectRatio
+                    ratio={1 / 1}
+                    className="rounded-lg overflow-hidden"
+                  >
+                    <img
+                      src={photo.photo_url}
+                      alt="Profile"
+                      className="w-full h-full object-cover"
+                    />
+                  </AspectRatio>
                   {photo.is_primary && (
                     <Badge className="absolute top-2 left-2 bg-primary">
                       Primary
@@ -457,22 +465,24 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
               ))}
 
               {photos.length < 5 && (
-                <label className="border-2 border-dashed border-muted-foreground/25 rounded-lg h-32 flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors">
-                  <Upload className="h-6 w-6 mb-2 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">
-                    Upload Photo
-                  </span>
-                  <input
-                    type="file"
-                    accept="image/*"
-                    className="hidden"
-                    onChange={(e) => {
-                      const file = e.target.files?.[0];
-                      if (file) uploadPhoto(file);
-                    }}
-                    disabled={uploading}
-                  />
-                </label>
+                <AspectRatio ratio={1 / 1}>
+                  <label className="border-2 border-dashed border-muted-foreground/25 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors w-full h-full">
+                    <Upload className="h-6 w-6 mb-2 text-muted-foreground" />
+                    <span className="text-sm text-muted-foreground">
+                      Upload Photo
+                    </span>
+                    <input
+                      type="file"
+                      accept="image/*"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) uploadPhoto(file);
+                      }}
+                      disabled={uploading}
+                    />
+                  </label>
+                </AspectRatio>
               )}
             </div>
 
