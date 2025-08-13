@@ -31,6 +31,7 @@ import {
 } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
+import { getRedirectUrl } from '@/lib/config';
 
 const signInSchema = z.object({
   email: z.string().email('Please enter a valid email address'),
@@ -142,12 +143,11 @@ export function AuthForm({
       }
 
       // Proceed with signup if user doesn't exist
-      const redirectUrl = `${window.location.origin}/`;
       const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
         options: {
-          emailRedirectTo: redirectUrl,
+          emailRedirectTo: getRedirectUrl('/'),
         },
       });
 
@@ -195,7 +195,7 @@ export function AuthForm({
     setLoading(true);
     try {
       const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
-        redirectTo: `${window.location.origin}/reset-password`,
+        redirectTo: getRedirectUrl('/reset-password'),
       });
 
       if (error) {
