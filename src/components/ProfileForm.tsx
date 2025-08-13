@@ -16,7 +16,15 @@ import {
 } from '@/components/ui/select';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
 import { Badge } from '@/components/ui/badge';
-import { X, Upload, User } from 'lucide-react';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
+import { X, Upload, User, CheckCircle } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
@@ -93,6 +101,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
   const [photos, setPhotos] = useState<UserPhoto[]>([]);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
   const {
     register,
@@ -315,10 +324,8 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
 
       onUpdate(updatedProfile);
 
-      toast({
-        title: 'Profile updated',
-        description: 'Your profile has been submitted for approval',
-      });
+      // Show confirmation dialog instead of toast
+      setShowConfirmation(true);
     } catch (error) {
       toast({
         title: 'Error',
@@ -608,6 +615,33 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
           </Button>
         </form>
       </CardContent>
+
+      {/* Confirmation Dialog */}
+      <AlertDialog open={showConfirmation} onOpenChange={setShowConfirmation}>
+        <AlertDialogContent className="max-w-md">
+          <AlertDialogHeader className="text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-green-100">
+              <CheckCircle className="h-8 w-8 text-green-600" />
+            </div>
+            <AlertDialogTitle className="text-xl font-semibold">
+              Profile Submitted Successfully!
+            </AlertDialogTitle>
+            <AlertDialogDescription className="text-base mt-4">
+              Your profile has been submitted for approval. Our team will review
+              your application and get back to you soon.
+              <br />
+              <br />
+              Thank you for your interest in 62 Crepusculo events!
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogAction
+            onClick={() => setShowConfirmation(false)}
+            className="w-full mt-6"
+          >
+            Continue
+          </AlertDialogAction>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
