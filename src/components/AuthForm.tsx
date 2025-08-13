@@ -1,4 +1,13 @@
 import { useState } from "react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import * as z from "zod";
@@ -50,6 +59,7 @@ interface AuthFormProps {
 
 export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
   const [loading, setLoading] = useState(false);
+  const [isAlertOpen, setIsAlertOpen] = useState(false);
 
   const signInForm = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -106,10 +116,7 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
           variant: "destructive",
         });
       } else {
-        toast({
-          title: "Check your email",
-          description: "We've sent you a confirmation link.",
-        });
+        setIsAlertOpen(true);
       }
     } catch (error) {
       toast({
@@ -226,6 +233,21 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
           </button>
         </div>
       </CardContent>
+      <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Check your email</AlertDialogTitle>
+            <AlertDialogDescription>
+              We've sent you a confirmation link.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogAction onClick={() => setIsAlertOpen(false)}>
+              OK
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </Card>
   );
 }
