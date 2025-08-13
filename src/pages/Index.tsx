@@ -15,7 +15,9 @@ const Index = () => {
 
   const [user, setUser] = useState<User | null>(null);
   const [showAuth, setShowAuth] = useState(false);
-  const [authMode, setAuthMode] = useState<'signin' | 'signup'>('signup');
+  const [authMode, setAuthMode] = useState<'signin' | 'signup' | 'reset'>(
+    'signup'
+  );
   const { flowState, setFlowState, loading } = useUserFlow(user);
 
   useEffect(() => {
@@ -98,6 +100,8 @@ const Index = () => {
             onToggleMode={() =>
               setAuthMode(authMode === 'signin' ? 'signup' : 'signin')
             }
+            onShowReset={() => setAuthMode('reset')}
+            onBackToSignIn={() => setAuthMode('signin')}
           />
 
           {/* Back button */}

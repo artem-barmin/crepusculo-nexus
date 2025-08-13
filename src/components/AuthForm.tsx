@@ -49,17 +49,33 @@ const signUpSchema = z.object({
     ),
 });
 
+const resetPasswordSchema = z.object({
+  email: z.string().email('Please enter a valid email address'),
+});
+
 type SignInFormData = z.infer<typeof signInSchema>;
 type SignUpFormData = z.infer<typeof signUpSchema>;
+type ResetPasswordFormData = z.infer<typeof resetPasswordSchema>;
 
 interface AuthFormProps {
-  mode: 'signin' | 'signup';
+  mode: 'signin' | 'signup' | 'reset';
   onToggleMode: () => void;
+  onShowReset: () => void;
+  onBackToSignIn: () => void;
 }
 
-export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
+export function AuthForm({
+  mode,
+  onToggleMode,
+  onShowReset,
+  onBackToSignIn,
+}: AuthFormProps) {
   const [loading, setLoading] = useState(false);
   const [isAlertOpen, setIsAlertOpen] = useState(false);
+  const [alertContent, setAlertContent] = useState({
+    title: '',
+    description: '',
+  });
 
   const signInForm = useForm<SignInFormData>({
     resolver: zodResolver(signInSchema),
@@ -69,6 +85,11 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
   const signUpForm = useForm<SignUpFormData>({
     resolver: zodResolver(signUpSchema),
     defaultValues: { email: '', password: '' },
+  });
+
+  const resetPasswordForm = useForm<ResetPasswordFormData>({
+    resolver: zodResolver(resetPasswordSchema),
+    defaultValues: { email: '' },
   });
 
   const handleSignIn = async (data: SignInFormData) => {
@@ -100,6 +121,27 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
   const handleSignUp = async (data: SignUpFormData) => {
     setLoading(true);
     try {
+      // First, check if user already exists using our edge function
+      const { data: checkResult, error: checkError } =
+        await supabase.functions.invoke('check-user-exists', {
+          body: { email: data.email },
+        });
+
+      if (checkError) {
+        console.error('Error checking user existence:', checkError);
+        // Continue with signup if check fails - fallback to original behavior
+      } else if (checkResult?.exists) {
+        // User already exists, show the dialog
+        setAlertContent({
+          title: 'Account Already Exists',
+          description: `An account with this email already exists. Would you like to sign in instead or reset your password?`,
+        });
+        setIsAlertOpen(true);
+        setLoading(false);
+        return;
+      }
+
+      // Proceed with signup if user doesn't exist
       const redirectUrl = `${window.location.origin}/`;
       const { error } = await supabase.auth.signUp({
         email: data.email,
@@ -110,12 +152,32 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
       });
 
       if (error) {
-        toast({
-          title: 'Error',
-          description: error.message,
-          variant: 'destructive',
-        });
+        // Fallback check for error messages in case the function check missed something
+        if (
+          error.message.includes('already registered') ||
+          error.message.includes('already been registered') ||
+          error.message.includes('User already registered') ||
+          error.message.includes('already exists') ||
+          error.message.toLowerCase().includes('signup is disabled')
+        ) {
+          setAlertContent({
+            title: 'Account Already Exists',
+            description: `An account with this email already exists. Would you like to sign in instead or reset your password?`,
+          });
+          setIsAlertOpen(true);
+        } else {
+          toast({
+            title: 'Error',
+            description: error.message,
+            variant: 'destructive',
+          });
+        }
       } else {
+        setAlertContent({
+          title: 'Check your email',
+          description:
+            "We've sent you a confirmation link to complete your registration.",
+        });
         setIsAlertOpen(true);
       }
     } catch (error) {
@@ -129,20 +191,74 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
     }
   };
 
+  const handleResetPassword = async (data: ResetPasswordFormData) => {
+    setLoading(true);
+    try {
+      const { error } = await supabase.auth.resetPasswordForEmail(data.email, {
+        redirectTo: `${window.location.origin}/reset-password`,
+      });
+
+      if (error) {
+        toast({
+          title: 'Error',
+          description: error.message,
+          variant: 'destructive',
+        });
+      } else {
+        setAlertContent({
+          title: 'Password Reset Email Sent',
+          description:
+            "Check your email for a link to reset your password. If it doesn't appear within a few minutes, check your spam folder.",
+        });
+        setIsAlertOpen(true);
+      }
+    } catch (error) {
+      toast({
+        title: 'Error',
+        description: 'An unexpected error occurred',
+        variant: 'destructive',
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const getCardTitle = () => {
+    switch (mode) {
+      case 'signin':
+        return 'Sign In';
+      case 'signup':
+        return 'Join 62 Crepusculo';
+      case 'reset':
+        return 'Reset Password';
+      default:
+        return 'Authentication';
+    }
+  };
+
+  const getCardDescription = () => {
+    switch (mode) {
+      case 'signin':
+        return 'Welcome back to the community';
+      case 'signup':
+        return 'Begin your journey with us';
+      case 'reset':
+        return 'Enter your email to receive a password reset link';
+      default:
+        return '';
+    }
+  };
+
   return (
     <Card className="w-full max-w-md bg-card/80 backdrop-blur-sm border-border/50">
       <CardHeader>
-        <CardTitle className="text-center">
-          {mode === 'signin' ? 'Sign In' : 'Join 62 Crepusculo'}
-        </CardTitle>
+        <CardTitle className="text-center">{getCardTitle()}</CardTitle>
         <CardDescription className="text-center">
-          {mode === 'signin'
-            ? 'Welcome back to the community'
-            : 'Begin your journey with us'}
+          {getCardDescription()}
         </CardDescription>
       </CardHeader>
       <CardContent>
-        {mode === 'signin' ? (
+        {mode === 'signin' && (
           <Form {...signInForm}>
             <form
               onSubmit={signInForm.handleSubmit(handleSignIn)}
@@ -179,7 +295,9 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
               </Button>
             </form>
           </Form>
-        ) : (
+        )}
+
+        {mode === 'signup' && (
           <Form {...signUpForm}>
             <form
               onSubmit={signUpForm.handleSubmit(handleSignUp)}
@@ -222,29 +340,103 @@ export function AuthForm({ mode, onToggleMode }: AuthFormProps) {
           </Form>
         )}
 
-        <div className="mt-4 text-center">
-          <button
-            onClick={onToggleMode}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors"
-          >
-            {mode === 'signin'
-              ? "Don't have an account? Sign up"
-              : 'Already have an account? Sign in'}
-          </button>
+        {mode === 'reset' && (
+          <Form {...resetPasswordForm}>
+            <form
+              onSubmit={resetPasswordForm.handleSubmit(handleResetPassword)}
+              className="space-y-4"
+            >
+              <FormField
+                control={resetPasswordForm.control}
+                name="email"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Email</FormLabel>
+                    <FormControl>
+                      <Input {...field} type="email" />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              <Button type="submit" className="w-full" disabled={loading}>
+                {loading ? 'Sending reset email...' : 'Send Reset Email'}
+              </Button>
+            </form>
+          </Form>
+        )}
+
+        <div className="mt-4 text-center space-y-2">
+          {mode === 'signin' && (
+            <>
+              <button
+                onClick={onShowReset}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors underline block"
+              >
+                Forgot your password?
+              </button>
+              <button
+                onClick={onToggleMode}
+                className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+              >
+                Don't have an account? Sign up
+              </button>
+            </>
+          )}
+
+          {mode === 'signup' && (
+            <button
+              onClick={onToggleMode}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              Already have an account? Sign in
+            </button>
+          )}
+
+          {mode === 'reset' && (
+            <button
+              onClick={onBackToSignIn}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors"
+            >
+              ← Back to sign in
+            </button>
+          )}
         </div>
       </CardContent>
+
       <AlertDialog open={isAlertOpen} onOpenChange={setIsAlertOpen}>
         <AlertDialogContent>
           <AlertDialogHeader>
-            <AlertDialogTitle>Check your email</AlertDialogTitle>
+            <AlertDialogTitle>{alertContent.title}</AlertDialogTitle>
             <AlertDialogDescription>
-              We've sent you a confirmation link.
+              {alertContent.description}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogAction onClick={() => setIsAlertOpen(false)}>
-              OK
-            </AlertDialogAction>
+            {alertContent.title === 'Account Already Exists' ? (
+              <div className="flex gap-2">
+                <AlertDialogAction
+                  onClick={() => {
+                    setIsAlertOpen(false);
+                    onToggleMode(); // Switch to sign in
+                  }}
+                >
+                  Sign In
+                </AlertDialogAction>
+                <AlertDialogAction
+                  onClick={() => {
+                    setIsAlertOpen(false);
+                    onShowReset(); // Show reset password
+                  }}
+                >
+                  Reset Password
+                </AlertDialogAction>
+              </div>
+            ) : (
+              <AlertDialogAction onClick={() => setIsAlertOpen(false)}>
+                OK
+              </AlertDialogAction>
+            )}
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
