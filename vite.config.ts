@@ -17,5 +17,5 @@ export default defineConfig(({ mode }) => ({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  base: process.env.NODE_ENV === 'production' ? '/crepusculo-nexus/' : '/',
+  base: process.env.GITHUB_PAGES === 'true' ? '/crepusculo-nexus/' : '/',
 }));
