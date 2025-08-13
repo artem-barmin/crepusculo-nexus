@@ -102,6 +102,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
 
   const {
     register,
@@ -323,6 +324,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
       }
 
       onUpdate(updatedProfile);
+      setIsEditing(false);
 
       // Show confirmation dialog instead of toast
       setShowConfirmation(true);
@@ -338,6 +340,32 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
     }
   };
 
+  const handleEditProfile = () => {
+    setIsEditing(true);
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditing(false);
+    // Reset form to original values
+    setValue('username', profile.username || '');
+    setValue('full_name', profile.full_name || '');
+    setValue('birthday', profile.birthday || '');
+    setValue('social_media', profile.social_media || ['']);
+    setValue('introduction', profile.introduction || '');
+    setValue('previous_events', profile.previous_events || 'no');
+    setValue('other_events', profile.other_events || '');
+    setValue('why_join', profile.why_join || '');
+    setValue('how_heard_about', profile.how_heard_about || '');
+    setSocialLinks(profile.social_media || ['']);
+  };
+
+  // Check if profile is submitted and not in editing mode
+  const isSubmitted = profile.status === 'pending' && !isEditing;
+  const canEdit =
+    profile.status === 'pending' ||
+    profile.status === 'approved' ||
+    profile.status === 'rejected';
+
   return (
     <Card>
       <CardHeader>
@@ -348,6 +376,49 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
         </p>
       </CardHeader>
       <CardContent>
+        {/* Status Message for Submitted Profile */}
+        {isSubmitted && (
+          <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle className="h-5 w-5 text-blue-600" />
+              <h3 className="font-semibold text-blue-900">
+                Profile Under Review
+              </h3>
+            </div>
+            <p className="text-blue-800 text-sm">
+              Your profile has been submitted and is currently under review. You
+              will receive an email notification once our team has processed
+              your application.
+            </p>
+            {canEdit && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleEditProfile}
+                className="mt-3"
+              >
+                Edit Profile
+              </Button>
+            )}
+          </div>
+        )}
+
+        {/* Warning for Editing */}
+        {isEditing && (
+          <div className="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <X className="h-5 w-5 text-yellow-600" />
+              <h3 className="font-semibold text-yellow-900">
+                Important Notice
+              </h3>
+            </div>
+            <p className="text-yellow-800 text-sm">
+              Any changes to your profile will reset your application status to
+              "pending" and require a new review process.
+            </p>
+          </div>
+        )}
+
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           {/* Username (editable) */}
           <div>
@@ -356,6 +427,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
               id="username"
               {...register('username')}
               placeholder="Enter your username"
+              disabled={isSubmitted}
             />
             {errors.username && (
               <p className="text-destructive text-sm mt-1">
@@ -375,6 +447,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
               id="full_name"
               {...register('full_name')}
               placeholder="Enter your full name"
+              disabled={isSubmitted}
             />
             {errors.full_name && (
               <p className="text-destructive text-sm mt-1">
@@ -386,7 +459,12 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
           {/* Birthday */}
           <div>
             <Label htmlFor="birthday">Birthday *</Label>
-            <Input id="birthday" type="date" {...register('birthday')} />
+            <Input
+              id="birthday"
+              type="date"
+              {...register('birthday')}
+              disabled={isSubmitted}
+            />
             {errors.birthday && (
               <p className="text-destructive text-sm mt-1">
                 {errors.birthday.message}
@@ -409,6 +487,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
                   value={link}
                   onChange={(e) => updateSocialLink(index, e.target.value)}
                   placeholder="https://instagram.com/username"
+                  disabled={isSubmitted}
                 />
                 {socialLinks.length > 1 && (
                   <Button
@@ -416,6 +495,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
                     variant="outline"
                     size="icon"
                     onClick={() => removeSocialLink(index)}
+                    disabled={isSubmitted}
                   >
                     <X className="h-4 w-4" />
                   </Button>
@@ -427,6 +507,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
               variant="outline"
               onClick={addSocialLink}
               className="mt-2"
+              disabled={isSubmitted}
             >
               Add Another Link
             </Button>
@@ -464,7 +545,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
                     </Badge>
                   )}
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
-                    {!photo.is_primary && (
+                    {!photo.is_primary && !isSubmitted && (
                       <Button
                         type="button"
                         size="sm"
@@ -474,19 +555,21 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
                         <User className="h-4 w-4" />
                       </Button>
                     )}
-                    <Button
-                      type="button"
-                      size="sm"
-                      variant="destructive"
-                      onClick={() => deletePhoto(photo.id)}
-                    >
-                      <X className="h-4 w-4" />
-                    </Button>
+                    {!isSubmitted && (
+                      <Button
+                        type="button"
+                        size="sm"
+                        variant="destructive"
+                        onClick={() => deletePhoto(photo.id)}
+                      >
+                        <X className="h-4 w-4" />
+                      </Button>
+                    )}
                   </div>
                 </div>
               ))}
 
-              {photos.length < 5 && (
+              {photos.length < 5 && !isSubmitted && (
                 <AspectRatio ratio={1 / 1}>
                   <label className="border-2 border-dashed border-muted-foreground/25 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors w-full h-full">
                     <Upload className="h-6 w-6 mb-2 text-muted-foreground" />
@@ -501,7 +584,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
                         const file = e.target.files?.[0];
                         if (file) uploadPhoto(file);
                       }}
-                      disabled={uploading}
+                      disabled={uploading || isSubmitted}
                     />
                   </label>
                 </AspectRatio>
@@ -523,6 +606,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
               {...register('introduction')}
               placeholder="Tell us about yourself..."
               rows={4}
+              disabled={isSubmitted}
             />
             {errors.introduction && (
               <p className="text-destructive text-sm mt-1">
@@ -539,6 +623,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
             <Select
               value={watch('previous_events')}
               onValueChange={(value) => setValue('previous_events', value)}
+              disabled={isSubmitted}
             >
               <SelectTrigger>
                 <SelectValue placeholder="Select an option" />
@@ -565,6 +650,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
                 {...register('how_heard_about')}
                 placeholder="Tell us how you discovered 62 Crepusculo..."
                 rows={3}
+                disabled={isSubmitted}
               />
               {errors.how_heard_about && (
                 <p className="text-destructive text-sm mt-1">
@@ -585,6 +671,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
               {...register('other_events')}
               placeholder="List any other sex-positive events you've attended..."
               rows={3}
+              disabled={isSubmitted}
             />
           </div>
 
@@ -598,6 +685,7 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
               {...register('why_join')}
               placeholder="Tell us why you want to be part of 62 Crepusculo..."
               rows={4}
+              disabled={isSubmitted}
             />
             {errors.why_join && (
               <p className="text-destructive text-sm mt-1">
@@ -606,13 +694,31 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
             )}
           </div>
 
-          <Button
-            type="submit"
-            className="w-full"
-            disabled={loading || uploading}
-          >
-            {loading ? 'Submitting...' : 'Submit Profile for Approval'}
-          </Button>
+          {/* Submit/Edit Buttons */}
+          {!isSubmitted ? (
+            <Button
+              type="submit"
+              className="w-full"
+              disabled={loading || uploading}
+            >
+              {loading
+                ? 'Submitting...'
+                : isEditing
+                  ? 'Update Profile'
+                  : 'Submit Profile for Approval'}
+            </Button>
+          ) : null}
+
+          {isEditing && (
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleCancelEdit}
+              className="w-full mt-2"
+            >
+              Cancel Changes
+            </Button>
+          )}
         </form>
       </CardContent>
 
