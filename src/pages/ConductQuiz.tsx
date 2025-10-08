@@ -57,7 +57,7 @@ const questions: Question[] = [
   {
     id: 5,
     question:
-      'What should you do if you witness a violation of the Code of Conduct?',
+      'What should you do if you witness a violation of the 62|Crepusculo Rules?',
     options: [
       "Ignore it if it doesn't involve you",
       'Handle it yourself',
@@ -118,7 +118,7 @@ export function ConductQuiz({ onComplete }: ConductQuizProps) {
       setErrors((prev) => ({ ...prev, [question.id]: true }));
       toast({
         title: 'Incorrect answer',
-        description: 'Please review the Code of Conduct and try again.',
+        description: 'Please review the 62|Crepusculo Rules and try again.',
         variant: 'destructive',
       });
       return false;
@@ -180,7 +180,7 @@ export function ConductQuiz({ onComplete }: ConductQuizProps) {
           <CardHeader>
             <div className="flex justify-between items-center">
               <div className="text-center flex-1">
-                <CardTitle>Code of Conduct Quiz</CardTitle>
+                <CardTitle>62|Crepusculo Rules Quiz</CardTitle>
                 <p className="text-muted-foreground">
                   Question {currentQuestion + 1} of {questions.length}
                 </p>

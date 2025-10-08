@@ -79,8 +79,8 @@ export function YourPass({ profile }: YourPassProps) {
           <div className="bg-muted rounded-lg p-4 text-sm">
             <h4 className="font-medium mb-2">Event Guidelines:</h4>
             <p className="text-muted-foreground">
-              Remember to follow the Code of Conduct at all times. Your pass is
-              personal and non-transferable.
+              Remember to follow the 62|Crepusculo Rules at all times. Your pass
+              is personal and non-transferable.
             </p>
           </div>
         </div>

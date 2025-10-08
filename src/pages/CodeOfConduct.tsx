@@ -19,7 +19,7 @@ export function CodeOfConduct({ onAccept }: CodeOfConductProps) {
     <div className="min-h-screen bg-background p-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex justify-between items-center mb-8">
-          <h1 className="text-3xl font-bold">Code of Conduct</h1>
+          <h1 className="text-3xl font-bold">62|Crepusculo Rules</h1>
           <Button variant="outline" onClick={() => supabase.auth.signOut()}>
             Sign Out
           </Button>
@@ -27,14 +27,14 @@ export function CodeOfConduct({ onAccept }: CodeOfConductProps) {
         <Card>
           <CardHeader>
             <CardTitle className="text-center text-2xl">
-              Code of Conduct
+              62|Crepusculo Rules
             </CardTitle>
           </CardHeader>
           <CardContent className="prose prose-invert max-w-none">
             <div className="space-y-6 text-foreground">
               <p className="text-lg">
                 Welcome to 62 Crepusculo. Before proceeding, please read and
-                understand our Code of Conduct.
+                understand our 62|Crepusculo Rules.
               </p>
 
               <div className="space-y-4">

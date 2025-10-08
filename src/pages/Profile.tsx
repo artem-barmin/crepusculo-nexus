@@ -70,7 +70,7 @@ export function Profile() {
         >
           <TabsList className="grid w-full grid-cols-3">
             <TabsTrigger value="information">Information</TabsTrigger>
-            <TabsTrigger value="conduct">Code of Conduct</TabsTrigger>
+            <TabsTrigger value="conduct">62|Crepusculo Rules</TabsTrigger>
             <TabsTrigger
               value="pass"
               disabled={
@@ -105,7 +105,7 @@ export function Profile() {
           <TabsContent value="conduct" className="mt-6">
             <Card>
               <CardHeader>
-                <CardTitle>Code of Conduct</CardTitle>
+                <CardTitle>62|Crepusculo Rules</CardTitle>
                 <p className="text-sm text-muted-foreground">
                   Our community guidelines and expectations
                 </p>
