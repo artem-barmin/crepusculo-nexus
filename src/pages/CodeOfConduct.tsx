@@ -68,14 +68,26 @@ export function CodeOfConduct({ onAccept }: CodeOfConductProps) {
 
                 <h3 className="text-xl font-semibold">Community Guidelines</h3>
                 <ul className="list-disc pl-6 space-y-2">
-                  <li>Respect everyone's boundaries and limits</li>
-                  <li>Ask before touching or engaging with someone</li>
-                  <li>No means no, immediately and without question</li>
-                  <li>Be mindful of personal space and comfort levels</li>
-                  <li>Report any violations to event staff immediately</li>
                   <li>
-                    Maintain confidentiality - what happens at the event stays
-                    at the event
+                    <strong>Respect & Consent</strong> — every interaction must
+                    be consensual. Ask before touching, talking or joining in.
+                  </li>
+                  <li>
+                    <strong>No Judgment</strong> — respect all bodies, ages,
+                    genders and identities.
+                  </li>
+                  <li>
+                    <strong>Privacy First</strong> — no photos or videos are
+                    allowed. We protect the intimacy of the space.
+                  </li>
+                  <li>
+                    <strong>Safe Space</strong> — if you feel uncomfortable or
+                    see inappropriate behavior, report it to the 62|Crepusculo
+                    safe team.
+                  </li>
+                  <li>
+                    <strong>Politeness</strong> — no means no, always be
+                    delicate and respectful.
                   </li>
                 </ul>
 

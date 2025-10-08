@@ -122,31 +122,42 @@ const Index = () => {
         </div>
 
         {/* Main description - only show when not in auth mode */}
-        <div className="mb-12 max-w-3xl mx-auto">
-          <h1 className="text-xl md:text-2xl font-light mb-8 leading-relaxed">
-            62 Crepusculo — kink & electronic music event.
+        <div className="mb-12 max-w-3xl mx-auto text-left">
+          <h1 className="text-2xl md:text-3xl font-light mb-8 leading-relaxed text-center">
+            Welcome to 62|Crepusculo
           </h1>
           <div className="text-base md:text-lg font-light leading-relaxed space-y-4 text-foreground/90">
             <p>
-              A space of freedom that takes the metaphorical form of "night
-              therapy".
+              62|Crepusculo is a kinky community. We create a safe space for
+              experiments and playing. To make sure everyone feels comfortable,
+              we ask all members to follow a few simple but essential rules:
             </p>
-            <p>
-              A spotlight on our bodies and minds, their emancipation in a quest
-              for self-exploration...
+            <ul className="space-y-3 pt-4 pl-5 list-disc">
+              <li>
+                <strong>Respect & Consent</strong> — every interaction must be
+                consensual. Ask before touching, talking or joining in.
+              </li>
+              <li>
+                <strong>No Judgment</strong> — respect all bodies, ages, genders
+                and identities.
+              </li>
+              <li>
+                <strong>Privacy First</strong> — no photos or videos are
+                allowed. We protect the intimacy of the space.
+              </li>
+              <li>
+                <strong>Safe Space</strong> — if you feel uncomfortable or see
+                inappropriate behavior, report it to the 62|Crepusculo safe
+                team.
+              </li>
+              <li>
+                <strong>Politeness</strong> — no means no, always be delicate
+                and respectful.
+              </li>
+            </ul>
+            <p className="pt-4">
+              Together we keep 62 safe, free and inspiring.
             </p>
-            <p>
-              In our spaces, individual freedom does not betray that of others;
-              a foundation that sets the tone for an essential concept within
-              our community: consent, the cornerstone of our policy, values, and
-              aspirations.
-            </p>
-            <p>
-              Let's recreate moments where bodily expression is possible in a
-              climate of total kindness, without taboos or judgment, and where
-              all divisions and their labels are abolished.
-            </p>
-            <p className="text-lg font-medium">Welcome to you.</p>
           </div>
         </div>
 
@@ -160,19 +171,8 @@ const Index = () => {
             }}
             className="text-base px-8 py-3"
           >
-            Join Us
+            I UNDERSTAND
           </Button>
-          <div>
-            <button
-              onClick={() => {
-                setAuthMode('signin');
-                setShowAuth(true);
-              }}
-              className="text-muted-foreground hover:text-foreground transition-colors underline"
-            >
-              Already a member? Sign in
-            </button>
-          </div>
         </div>
       </div>
     </div>
