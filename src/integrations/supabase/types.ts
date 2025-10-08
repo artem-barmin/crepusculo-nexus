@@ -40,6 +40,7 @@ export type Database = {
           birthday: string | null;
           created_at: string | null;
           full_name: string | null;
+          gender: Database['public']['Enums']['gender'] | null;
           how_heard_about: string | null;
           id: string;
           introduction: string | null;
@@ -56,6 +57,7 @@ export type Database = {
           birthday?: string | null;
           created_at?: string | null;
           full_name?: string | null;
+          gender?: Database['public']['Enums']['gender'] | null;
           how_heard_about?: string | null;
           id?: string;
           introduction?: string | null;
@@ -72,6 +74,7 @@ export type Database = {
           birthday?: string | null;
           created_at?: string | null;
           full_name?: string | null;
+          gender?: Database['public']['Enums']['gender'] | null;
           how_heard_about?: string | null;
           id?: string;
           introduction?: string | null;
@@ -118,6 +121,7 @@ export type Database = {
       [_ in never]: never;
     };
     Enums: {
+      gender: 'Male' | 'Female' | 'Other';
       profile_status: 'pending' | 'approved' | 'rejected' | 'approved_plus';
     };
     CompositeTypes: {

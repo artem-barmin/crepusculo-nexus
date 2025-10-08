@@ -12,6 +12,7 @@ const sampleProfile = {
   user_id: '2a5db04d-e234-4dca-bd91-ed64e3f071de',
   username: 'bob.valentinov',
   full_name: 'Bobyleva Svitlana',
+  gender: 'Female' as const,
   birthday: '2000-05-15',
   social_media: ['https://www.instagram.com/sexto.lisboa/'],
   introduction:

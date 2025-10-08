@@ -24,10 +24,20 @@ import {
   AlertDialogTitle,
 } from '@/components/ui/alert-dialog';
 import { X, Upload, User, CheckCircle } from 'lucide-react';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import {
+  Form,
+  FormControl,
+  FormField,
+  FormItem,
+  FormLabel,
+  FormMessage,
+} from '@/components/ui/form';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
 const profileSchema = z.object({
+  gender: z.enum(['Male', 'Female', 'Other']),
   username: z
     .string()
     .min(3, 'Username must be at least 3 characters')
@@ -75,6 +85,7 @@ interface Profile {
   birthday: string | null;
   social_media: string[] | null;
   introduction: string | null;
+  gender: 'Male' | 'Female' | 'Other' | null;
   previous_events: string;
   other_events: string | null;
   why_join: string | null;
@@ -108,19 +119,13 @@ export function ProfileForm({
   const [showConfirmation, setShowConfirmation] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
 
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    setValue,
-    watch,
-    trigger,
-  } = useForm<ProfileFormData>({
+  const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
     defaultValues: {
       username: profile.username || '',
       full_name: profile.full_name || '',
       birthday: profile.birthday || '',
+      gender: profile.gender || undefined,
       social_media: profile.social_media || [''],
       introduction: profile.introduction || '',
       previous_events: profile.previous_events || 'no',
@@ -129,6 +134,15 @@ export function ProfileForm({
       how_heard_about: profile.how_heard_about || '',
     },
   });
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    trigger,
+    control,
+  } = form;
 
   const previousEvents = watch('previous_events');
 
@@ -320,6 +334,7 @@ export function ProfileForm({
           how_heard_about:
             data.previous_events === 'no' ? data.how_heard_about : null,
           status: 'pending' as const,
+          gender: data.gender,
         })
         .eq('id', profile.id)
         .select()
@@ -358,6 +373,7 @@ export function ProfileForm({
     setValue('birthday', profile.birthday || '');
     setValue('social_media', profile.social_media || ['']);
     setValue('introduction', profile.introduction || '');
+    setValue('gender', profile.gender || undefined);
     setValue('previous_events', profile.previous_events || 'no');
     setValue('other_events', profile.other_events || '');
     setValue('why_join', profile.why_join || '');
@@ -425,318 +441,359 @@ export function ProfileForm({
           </div>
         )}
 
-        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-          {/* Username (editable) */}
-          <div>
-            <Label htmlFor="username">Username *</Label>
-            <Input
-              id="username"
-              {...register('username')}
-              placeholder="Enter your username"
-              disabled={isSubmitted}
-            />
-            {errors.username && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.username.message}
-              </p>
-            )}
-            <p className="text-xs text-muted-foreground mt-1">
-              Your username can contain letters, numbers, dots, hyphens, and
-              underscores
-            </p>
-          </div>
-
-          {/* Full Name */}
-          <div>
-            <Label htmlFor="full_name">Full Name *</Label>
-            <Input
-              id="full_name"
-              {...register('full_name')}
-              placeholder="Enter your full name"
-              disabled={isSubmitted}
-            />
-            {errors.full_name && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.full_name.message}
-              </p>
-            )}
-          </div>
-
-          {/* Birthday */}
-          <div>
-            <Label htmlFor="birthday">Birthday *</Label>
-            <Input
-              id="birthday"
-              type="date"
-              {...register('birthday')}
-              disabled={isSubmitted}
-            />
-            {errors.birthday && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.birthday.message}
-              </p>
-            )}
-            <p className="text-xs text-muted-foreground mt-1">
-              You must be at least 21 years old to participate
-            </p>
-          </div>
-
-          {/* Social Media */}
-          <div>
-            <Label>Social Media Links *</Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Add at least one social media profile (must start with https://)
-            </p>
-            {socialLinks.map((link, index) => (
-              <div key={index} className="flex gap-2 mb-2">
-                <Input
-                  value={link}
-                  onChange={(e) => updateSocialLink(index, e.target.value)}
-                  placeholder="https://instagram.com/username"
-                  disabled={isSubmitted}
-                />
-                {socialLinks.length > 1 && (
-                  <Button
-                    type="button"
-                    variant="outline"
-                    size="icon"
-                    onClick={() => removeSocialLink(index)}
-                    disabled={isSubmitted}
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                )}
-              </div>
-            ))}
-            <Button
-              type="button"
-              variant="outline"
-              onClick={addSocialLink}
-              className="mt-2"
-              disabled={isSubmitted}
-            >
-              Add Another Link
-            </Button>
-            {errors.social_media && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.social_media.message}
-              </p>
-            )}
-          </div>
-
-          {/* Photos */}
-          <div>
-            <Label>Photos ({photos.length}/5) *</Label>
-            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
-              <p className="font-semibold mb-1">Photo Guidelines:</p>
-              <ul className="list-disc list-inside space-y-1">
-                <li>Upload 3-5 photos.</li>
-                <li>
-                  Use a photo where we can clearly recognize you: no glasses, no
-                  masks, no group photos, etc.
-                </li>
-              </ul>
-            </div>
-
-            <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
-              {photos.map((photo) => (
-                <div key={photo.id} className="relative group">
-                  <AspectRatio
-                    ratio={1 / 1}
-                    className="rounded-lg overflow-hidden"
-                  >
-                    <img
-                      src={photo.photo_url}
-                      alt="Profile"
-                      className="w-full h-full object-cover"
-                    />
-                  </AspectRatio>
-                  {photo.is_primary && (
-                    <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-medium uppercase tracking-wide px-2 py-1 rounded-sm">
-                      Primary
-                    </div>
-                  )}
-                  <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
-                    {!photo.is_primary && !isSubmitted && (
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="secondary"
-                        onClick={() => setPrimaryPhoto(photo.id)}
-                      >
-                        <User className="h-4 w-4" />
-                      </Button>
-                    )}
-                    {!isSubmitted && (
-                      <Button
-                        type="button"
-                        size="sm"
-                        variant="destructive"
-                        onClick={() => deletePhoto(photo.id)}
-                      >
-                        <X className="h-4 w-4" />
-                      </Button>
-                    )}
-                  </div>
-                </div>
-              ))}
-
-              {photos.length < 5 && !isSubmitted && (
-                <AspectRatio ratio={1 / 1}>
-                  <label className="border-2 border-dashed border-muted-foreground/25 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors w-full h-full">
-                    <Upload className="h-6 w-6 mb-2 text-muted-foreground" />
-                    <span className="text-sm text-muted-foreground">
-                      Upload Photo
-                    </span>
-                    <input
-                      type="file"
-                      accept="image/*"
-                      className="hidden"
-                      multiple
-                      onChange={(e) => {
-                        const files = e.target.files;
-                        if (files) {
-                          for (const file of files) {
-                            uploadPhoto(file);
-                          }
-                        }
-                      }}
-                      disabled={uploading || isSubmitted}
-                    />
-                  </label>
-                </AspectRatio>
-              )}
-            </div>
-
-            {photos.length < 3 && (
-              <p className="text-destructive text-sm">
-                Please upload at least 3 photos
-              </p>
-            )}
-          </div>
-
-          {/* Introduction */}
-          <div>
-            <Label htmlFor="introduction">Introduce yourself *</Label>
-            <Textarea
-              id="introduction"
-              {...register('introduction')}
-              placeholder="Tell us about yourself..."
-              rows={4}
-              disabled={isSubmitted}
-            />
-            {errors.introduction && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.introduction.message}
-              </p>
-            )}
-          </div>
-
-          {/* Previous Events */}
-          <div>
-            <Label htmlFor="previous_events">
-              Did you already attend any 62 Crepusculo events? *
-            </Label>
-            <Select
-              value={watch('previous_events')}
-              onValueChange={(value) => setValue('previous_events', value)}
-              disabled={isSubmitted}
-            >
-              <SelectTrigger>
-                <SelectValue placeholder="Select an option" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="no">No, I haven't been</SelectItem>
-                <SelectItem value="once">Yes, I've been once</SelectItem>
-                <SelectItem value="multiple">
-                  Yes, I've been more than once
-                </SelectItem>
-              </SelectContent>
-            </Select>
-          </div>
-
-          {/* How heard about (conditional) */}
-          {previousEvents === 'no' && (
+        <Form {...form}>
+          <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
+            {/* Username (editable) */}
             <div>
-              <Label htmlFor="how_heard_about">
-                How did you hear about our event / Who recommended 62 Crepusculo
-                to you? *
-              </Label>
-              <Textarea
-                id="how_heard_about"
-                {...register('how_heard_about')}
-                placeholder="Tell us how you discovered 62 Crepusculo..."
-                rows={3}
+              <Label htmlFor="username">Username *</Label>
+              <Input
+                id="username"
+                {...register('username')}
+                placeholder="Enter your username"
                 disabled={isSubmitted}
               />
-              {errors.how_heard_about && (
+              {errors.username && (
                 <p className="text-destructive text-sm mt-1">
-                  {errors.how_heard_about.message}
+                  {errors.username.message}
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground mt-1">
+                Your username can contain letters, numbers, dots, hyphens, and
+                underscores
+              </p>
+            </div>
+
+            {/* Full Name */}
+            <div>
+              <Label htmlFor="full_name">Full Name *</Label>
+              <Input
+                id="full_name"
+                {...register('full_name')}
+                placeholder="Enter your full name"
+                disabled={isSubmitted}
+              />
+              {errors.full_name && (
+                <p className="text-destructive text-sm mt-1">
+                  {errors.full_name.message}
                 </p>
               )}
             </div>
-          )}
 
-          {/* Other Events */}
-          <div>
-            <Label htmlFor="other_events">
-              Did you already take part in other sex-positive events? If so,
-              which ones?
-            </Label>
-            <Textarea
-              id="other_events"
-              {...register('other_events')}
-              placeholder="List any other sex-positive events you've attended..."
-              rows={3}
-              disabled={isSubmitted}
+            {/* Gender */}
+            <FormField
+              control={control}
+              name="gender"
+              render={({ field }) => (
+                <FormItem className="space-y-3">
+                  <FormLabel>Gender *</FormLabel>
+                  <FormControl>
+                    <RadioGroup
+                      onValueChange={field.onChange}
+                      defaultValue={field.value}
+                      className="flex flex-col space-y-1"
+                      disabled={isSubmitted}
+                    >
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="Male" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Male</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="Female" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Female</FormLabel>
+                      </FormItem>
+                      <FormItem className="flex items-center space-x-3 space-y-0">
+                        <FormControl>
+                          <RadioGroupItem value="Other" />
+                        </FormControl>
+                        <FormLabel className="font-normal">Other</FormLabel>
+                      </FormItem>
+                    </RadioGroup>
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
             />
-          </div>
 
-          {/* Why Join */}
-          <div>
-            <Label htmlFor="why_join">
-              Why do you want to join 62 Crepusculo? *
-            </Label>
-            <Textarea
-              id="why_join"
-              {...register('why_join')}
-              placeholder="Tell us why you want to be part of 62 Crepusculo..."
-              rows={4}
-              disabled={isSubmitted}
-            />
-            {errors.why_join && (
-              <p className="text-destructive text-sm mt-1">
-                {errors.why_join.message}
+            {/* Birthday */}
+            <div>
+              <Label htmlFor="birthday">Birthday *</Label>
+              <Input
+                id="birthday"
+                type="date"
+                {...register('birthday')}
+                disabled={isSubmitted}
+              />
+              {errors.birthday && (
+                <p className="text-destructive text-sm mt-1">
+                  {errors.birthday.message}
+                </p>
+              )}
+              <p className="text-xs text-muted-foreground mt-1">
+                You must be at least 21 years old to participate
               </p>
+            </div>
+
+            {/* Social Media */}
+            <div>
+              <Label>Social Media Links *</Label>
+              <p className="text-xs text-muted-foreground mb-2">
+                Add at least one social media profile (must start with https://)
+              </p>
+              {socialLinks.map((link, index) => (
+                <div key={index} className="flex gap-2 mb-2">
+                  <Input
+                    value={link}
+                    onChange={(e) => updateSocialLink(index, e.target.value)}
+                    placeholder="https://instagram.com/username"
+                    disabled={isSubmitted}
+                  />
+                  {socialLinks.length > 1 && (
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="icon"
+                      onClick={() => removeSocialLink(index)}
+                      disabled={isSubmitted}
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
+                  )}
+                </div>
+              ))}
+              <Button
+                type="button"
+                variant="outline"
+                onClick={addSocialLink}
+                className="mt-2"
+                disabled={isSubmitted}
+              >
+                Add Another Link
+              </Button>
+              {errors.social_media && (
+                <p className="text-destructive text-sm mt-1">
+                  {errors.social_media.message}
+                </p>
+              )}
+            </div>
+
+            {/* Photos */}
+            <div>
+              <Label>Photos ({photos.length}/5) *</Label>
+              <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+                <p className="font-semibold mb-1">Photo Guidelines:</p>
+                <ul className="list-disc list-inside space-y-1">
+                  <li>Upload 3-5 photos.</li>
+                  <li>
+                    Use a photo where we can clearly recognize you: no glasses,
+                    no masks, no group photos, etc.
+                  </li>
+                </ul>
+              </div>
+
+              <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
+                {photos.map((photo) => (
+                  <div key={photo.id} className="relative group">
+                    <AspectRatio
+                      ratio={1 / 1}
+                      className="rounded-lg overflow-hidden"
+                    >
+                      <img
+                        src={photo.photo_url}
+                        alt="Profile"
+                        className="w-full h-full object-cover"
+                      />
+                    </AspectRatio>
+                    {photo.is_primary && (
+                      <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-medium uppercase tracking-wide px-2 py-1 rounded-sm">
+                        Primary
+                      </div>
+                    )}
+                    <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
+                      {!photo.is_primary && !isSubmitted && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="secondary"
+                          onClick={() => setPrimaryPhoto(photo.id)}
+                        >
+                          <User className="h-4 w-4" />
+                        </Button>
+                      )}
+                      {!isSubmitted && (
+                        <Button
+                          type="button"
+                          size="sm"
+                          variant="destructive"
+                          onClick={() => deletePhoto(photo.id)}
+                        >
+                          <X className="h-4 w-4" />
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                ))}
+
+                {photos.length < 5 && !isSubmitted && (
+                  <AspectRatio ratio={1 / 1}>
+                    <label className="border-2 border-dashed border-muted-foreground/25 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors w-full h-full">
+                      <Upload className="h-6 w-6 mb-2 text-muted-foreground" />
+                      <span className="text-sm text-muted-foreground">
+                        Upload Photo
+                      </span>
+                      <input
+                        type="file"
+                        accept="image/*"
+                        className="hidden"
+                        multiple
+                        onChange={(e) => {
+                          const files = e.target.files;
+                          if (files) {
+                            for (const file of files) {
+                              uploadPhoto(file);
+                            }
+                          }
+                        }}
+                        disabled={uploading || isSubmitted}
+                      />
+                    </label>
+                  </AspectRatio>
+                )}
+              </div>
+
+              {photos.length < 3 && (
+                <p className="text-destructive text-sm">
+                  Please upload at least 3 photos
+                </p>
+              )}
+            </div>
+
+            {/* Introduction */}
+            <div>
+              <Label htmlFor="introduction">Introduce yourself *</Label>
+              <Textarea
+                id="introduction"
+                {...register('introduction')}
+                placeholder="Tell us about yourself..."
+                rows={4}
+                disabled={isSubmitted}
+              />
+              {errors.introduction && (
+                <p className="text-destructive text-sm mt-1">
+                  {errors.introduction.message}
+                </p>
+              )}
+            </div>
+
+            {/* Previous Events */}
+            <div>
+              <Label htmlFor="previous_events">
+                Did you already attend any 62 Crepusculo events? *
+              </Label>
+              <Select
+                value={watch('previous_events')}
+                onValueChange={(value) => setValue('previous_events', value)}
+                disabled={isSubmitted}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select an option" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="no">No, I haven't been</SelectItem>
+                  <SelectItem value="once">Yes, I've been once</SelectItem>
+                  <SelectItem value="multiple">
+                    Yes, I've been more than once
+                  </SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* How heard about (conditional) */}
+            {previousEvents === 'no' && (
+              <div>
+                <Label htmlFor="how_heard_about">
+                  How did you hear about our event / Who recommended 62
+                  Crepusculo to you? *
+                </Label>
+                <Textarea
+                  id="how_heard_about"
+                  {...register('how_heard_about')}
+                  placeholder="Tell us how you discovered 62 Crepusculo..."
+                  rows={3}
+                  disabled={isSubmitted}
+                />
+                {errors.how_heard_about && (
+                  <p className="text-destructive text-sm mt-1">
+                    {errors.how_heard_about.message}
+                  </p>
+                )}
+              </div>
             )}
-          </div>
 
-          {/* Submit/Edit Buttons */}
-          {!isSubmitted ? (
-            <Button
-              type="submit"
-              className="w-full"
-              disabled={loading || uploading}
-            >
-              {loading
-                ? 'Submitting...'
-                : isEditing
-                  ? 'Update Profile'
-                  : 'Submit Profile for Approval'}
-            </Button>
-          ) : null}
+            {/* Other Events */}
+            <div>
+              <Label htmlFor="other_events">
+                Did you already take part in other sex-positive events? If so,
+                which ones?
+              </Label>
+              <Textarea
+                id="other_events"
+                {...register('other_events')}
+                placeholder="List any other sex-positive events you've attended..."
+                rows={3}
+                disabled={isSubmitted}
+              />
+            </div>
 
-          {isEditing && (
-            <Button
-              type="button"
-              variant="outline"
-              onClick={handleCancelEdit}
-              className="w-full mt-2"
-            >
-              Cancel Changes
-            </Button>
-          )}
-        </form>
+            {/* Why Join */}
+            <div>
+              <Label htmlFor="why_join">
+                Why do you want to join 62 Crepusculo? *
+              </Label>
+              <Textarea
+                id="why_join"
+                {...register('why_join')}
+                placeholder="Tell us why you want to be part of 62 Crepusculo..."
+                rows={4}
+                disabled={isSubmitted}
+              />
+              {errors.why_join && (
+                <p className="text-destructive text-sm mt-1">
+                  {errors.why_join.message}
+                </p>
+              )}
+            </div>
+
+            {/* Submit/Edit Buttons */}
+            {!isSubmitted ? (
+              <Button
+                type="submit"
+                className="w-full"
+                disabled={loading || uploading}
+              >
+                {loading
+                  ? 'Submitting...'
+                  : isEditing
+                    ? 'Update Profile'
+                    : 'Submit Profile for Approval'}
+              </Button>
+            ) : null}
+
+            {isEditing && (
+              <Button
+                type="button"
+                variant="outline"
+                onClick={handleCancelEdit}
+                className="w-full mt-2"
+              >
+                Cancel Changes
+              </Button>
+            )}
+          </form>
+        </Form>
       </CardContent>
 
       {/* Confirmation Dialog */}
