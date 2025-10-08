@@ -16,70 +16,66 @@ interface Question {
 const questions: Question[] = [
   {
     id: 1,
-    question: 'What are the 5 principles of consent?',
-    options: [
-      'Explicit, Enthusiastic, Specific, Revocable, Informed',
-      'Clear, Happy, General, Permanent, Simple',
-      'Verbal, Physical, Emotional, Mental, Spiritual',
-    ],
+    question: 'What is the most important principle for any interaction?',
+    options: ['Respect & Consent', 'Fun & Freedom', 'Spontaneity'],
     correctAnswer: 0,
   },
   {
     id: 2,
-    question: 'Can consent be withdrawn at any time?',
-    options: [
-      'No, once given it cannot be changed',
-      'Yes, but only before activities begin',
-      'Yes, at any time for any reason',
-    ],
-    correctAnswer: 2,
+    question: 'Which of these is a non-verbal sign of NO consent?',
+    options: ['Avoiding eye contact', 'Smiling', 'Active body language'],
+    correctAnswer: 0,
   },
   {
     id: 3,
-    question: "If someone says 'no' to a request, what should you do?",
+    question: 'Which of these is a non-verbal sign of possible consent?',
     options: [
-      'Try to convince them',
-      'Respect their decision immediately',
-      'Ask them again later',
+      'Pulling someone closer',
+      'Closed body language',
+      'Shaking head no',
     ],
-    correctAnswer: 1,
+    correctAnswer: 0,
   },
   {
     id: 4,
-    question: "What does 'enthusiastic consent' mean?",
+    question:
+      'What should you do if you want to touch, talk to or watch someone?',
     options: [
-      'Consent given with genuine desire to participate',
-      'Consent given loudly',
-      'Consent given repeatedly',
+      'Ask first',
+      'Just do it, it’s a free space',
+      'Wait until they touch you',
     ],
     correctAnswer: 0,
   },
   {
     id: 5,
-    question:
-      'What should you do if you witness a violation of the 62|Crepusculo Rules?',
+    question: 'What is the rule about photos and videos?',
     options: [
-      "Ignore it if it doesn't involve you",
-      'Handle it yourself',
-      'Report it to event staff immediately',
+      'Any kind of photos or videos are not allowed',
+      'Photos are allowed only with permission',
+      'Selfies are always okay',
     ],
-    correctAnswer: 2,
+    correctAnswer: 0,
   },
   {
     id: 6,
-    question: 'Consent to one activity means consent to all activities.',
-    options: ['True', 'False'],
-    correctAnswer: 1,
+    question: 'What should you do if you see or feel inappropriate behavior?',
+    options: [
+      'Report it to the safe team',
+      'Ignore it, it’s part of the party',
+      'Try to fix it by yourself',
+    ],
+    correctAnswer: 0,
   },
   {
     id: 7,
-    question: 'What is our policy on confidentiality?',
+    question: 'What does “No means no” mean?',
     options: [
-      'You can share anything that happens',
-      'What happens at the event stays at the event',
-      'You can share with close friends only',
+      'Respect boundaries, no pressure',
+      'Try again later',
+      'Depends on the situation',
     ],
-    correctAnswer: 1,
+    correctAnswer: 0,
   },
 ];
 
