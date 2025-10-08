@@ -804,14 +804,12 @@ export function ProfileForm({
               <CheckCircle className="h-8 w-8 text-green-600" />
             </div>
             <AlertDialogTitle className="text-xl font-semibold">
-              Profile Submitted Successfully!
+              Profile Submitted Successfully
             </AlertDialogTitle>
             <AlertDialogDescription className="text-base mt-4">
-              Your profile has been submitted for approval. Our team will review
-              your application and get back to you soon.
+              Thank you for applying.
               <br />
-              <br />
-              Thank you for your interest in 62 Crepusculo events!
+              We will review your application as soon as possible.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogAction
