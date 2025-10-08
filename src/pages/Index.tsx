@@ -7,8 +7,7 @@ import { CodeOfConduct } from '@/pages/CodeOfConduct';
 import { ConductQuiz } from '@/pages/ConductQuiz';
 import { Profile } from '@/pages/Profile';
 import { useUserFlow } from '@/hooks/useUserFlow';
-import heroBackground from '@/assets/hero-background.jpg';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo_new.png';
 
 const Index = () => {
   console.log('Index component is rendering...');
@@ -71,15 +70,7 @@ const Index = () => {
   // Show auth form centered on page
   if (showAuth) {
     return (
-      <div
-        className="min-h-screen relative flex items-center justify-center bg-background"
-        style={{
-          backgroundImage: `url(${heroBackground})`,
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-        }}
-      >
+      <div className="min-h-screen relative flex items-center justify-center bg-black">
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/60" />
 
@@ -119,15 +110,7 @@ const Index = () => {
   }
 
   return (
-    <div
-      className="min-h-screen relative flex flex-col items-center justify-center bg-background"
-      style={{
-        backgroundImage: `url(${heroBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
+    <div className="min-h-screen relative flex flex-col items-center justify-center bg-black">
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/60" />
 
@@ -140,10 +123,10 @@ const Index = () => {
 
         {/* Main description - only show when not in auth mode */}
         <div className="mb-12 max-w-3xl mx-auto">
-          <h1 className="text-2xl md:text-3xl font-light mb-8 leading-relaxed">
+          <h1 className="text-xl md:text-2xl font-light mb-8 leading-relaxed">
             62 Crepusculo — kink & electronic music event.
           </h1>
-          <div className="text-lg md:text-xl font-light leading-relaxed space-y-4 text-foreground/90">
+          <div className="text-base md:text-lg font-light leading-relaxed space-y-4 text-foreground/90">
             <p>
               A space of freedom that takes the metaphorical form of "night
               therapy".
@@ -163,7 +146,7 @@ const Index = () => {
               climate of total kindness, without taboos or judgment, and where
               all divisions and their labels are abolished.
             </p>
-            <p className="text-xl font-medium">Welcome to you.</p>
+            <p className="text-lg font-medium">Welcome to you.</p>
           </div>
         </div>
 
@@ -175,7 +158,7 @@ const Index = () => {
               setAuthMode('signup');
               setShowAuth(true);
             }}
-            className="text-lg px-8 py-3"
+            className="text-base px-8 py-3"
           >
             Join Us
           </Button>

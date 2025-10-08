@@ -23,8 +23,7 @@ import {
 } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import heroBackground from '@/assets/hero-background.jpg';
-import logo from '@/assets/logo.png';
+import logo from '@/assets/logo_new.png';
 
 const resetPasswordSchema = z
   .object({
@@ -152,15 +151,7 @@ export function ResetPassword() {
   }
 
   return (
-    <div
-      className="min-h-screen relative flex items-center justify-center bg-background"
-      style={{
-        backgroundImage: `url(${heroBackground})`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        backgroundRepeat: 'no-repeat',
-      }}
-    >
+    <div className="min-h-screen relative flex items-center justify-center bg-black">
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/60" />
 
