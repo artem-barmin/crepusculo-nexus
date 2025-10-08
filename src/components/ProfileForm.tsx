@@ -527,10 +527,16 @@ export function ProfileForm({
           {/* Photos */}
           <div>
             <Label>Photos ({photos.length}/5) *</Label>
-            <p className="text-xs text-muted-foreground mb-2">
-              Upload 3-5 photos. Your face should be clearly visible in at least
-              one photo.
-            </p>
+            <div className="mb-4 p-3 bg-blue-50 border border-blue-200 rounded-lg text-sm text-blue-800">
+              <p className="font-semibold mb-1">Photo Guidelines:</p>
+              <ul className="list-disc list-inside space-y-1">
+                <li>Upload 3-5 photos.</li>
+                <li>
+                  Use a photo where we can clearly recognize you: no glasses, no
+                  masks, no group photos, etc.
+                </li>
+              </ul>
+            </div>
 
             <div className="grid grid-cols-2 md:grid-cols-3 gap-4 mb-4">
               {photos.map((photo) => (
@@ -586,9 +592,14 @@ export function ProfileForm({
                       type="file"
                       accept="image/*"
                       className="hidden"
+                      multiple
                       onChange={(e) => {
-                        const file = e.target.files?.[0];
-                        if (file) uploadPhoto(file);
+                        const files = e.target.files;
+                        if (files) {
+                          for (const file of files) {
+                            uploadPhoto(file);
+                          }
+                        }
                       }}
                       disabled={uploading || isSubmitted}
                     />
