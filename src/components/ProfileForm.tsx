@@ -117,7 +117,10 @@ export function ProfileForm({
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
-  const [isEditing, setIsEditing] = useState(false);
+  const [isEditing, setIsEditing] = useState(() => {
+    if (profile.full_name === null) return true;
+    return false;
+  });
 
   const form = useForm<ProfileFormData>({
     resolver: zodResolver(profileSchema),
@@ -194,11 +197,11 @@ export function ProfileForm({
     trigger('social_media');
   };
 
-  const uploadPhoto = async (file: File) => {
-    if (photos.length >= 5) {
+  const handlePhotoUpload = async (files: FileList) => {
+    if (photos.length + files.length > 5) {
       toast({
         title: 'Upload limit reached',
-        description: 'You can upload maximum 5 photos',
+        description: 'You can upload a maximum of 5 photos.',
         variant: 'destructive',
       });
       return;
@@ -207,40 +210,54 @@ export function ProfileForm({
     setUploading(true);
 
     try {
-      const fileExt = file.name.split('.').pop();
-      const fileName = `${profile.user_id}/${Date.now()}.${fileExt}`;
+      const filesArray = Array.from(files);
+      const isPrimaryPhotoPresent = photos.some((p) => p.is_primary);
 
-      const { error: uploadError } = await supabase.storage
-        .from('user-photos')
-        .upload(fileName, file);
+      const uploadPromises = filesArray.map(async (file, index) => {
+        const fileExt = file.name.split('.').pop();
+        const fileName = `${profile.user_id}/${Date.now()}-${index}.${fileExt}`;
 
-      if (uploadError) {
-        throw uploadError;
+        const { error: uploadError } = await supabase.storage
+          .from('user-photos')
+          .upload(fileName, file);
+
+        if (uploadError) {
+          throw uploadError;
+        }
+
+        const {
+          data: { publicUrl },
+        } = supabase.storage.from('user-photos').getPublicUrl(fileName);
+
+        return {
+          user_id: profile.user_id,
+          photo_url: publicUrl,
+          is_primary:
+            !isPrimaryPhotoPresent && photos.length === 0 && index === 0,
+        };
+      });
+
+      const newPhotosToInsert = await Promise.all(uploadPromises);
+
+      if (newPhotosToInsert.length === 0) {
+        setUploading(false);
+        return;
       }
-
-      const {
-        data: { publicUrl },
-      } = supabase.storage.from('user-photos').getPublicUrl(fileName);
 
       const { data, error: dbError } = await supabase
         .from('user_photos')
-        .insert({
-          user_id: profile.user_id,
-          photo_url: publicUrl,
-          is_primary: photos.length === 0,
-        })
-        .select()
-        .single();
+        .insert(newPhotosToInsert)
+        .select();
 
       if (dbError) {
         throw dbError;
       }
 
-      setPhotos((prev) => [...prev, data]);
+      setPhotos((prev) => [...prev, ...data]);
 
       toast({
-        title: 'Photo uploaded',
-        description: 'Your photo has been uploaded successfully',
+        title: 'Photo(s) uploaded',
+        description: 'Your photo(s) have been uploaded successfully.',
       });
     } catch (error) {
       toast({
@@ -652,9 +669,7 @@ export function ProfileForm({
                         onChange={(e) => {
                           const files = e.target.files;
                           if (files) {
-                            for (const file of files) {
-                              uploadPhoto(file);
-                            }
+                            handlePhotoUpload(files);
                           }
                         }}
                         disabled={uploading || isSubmitted}
