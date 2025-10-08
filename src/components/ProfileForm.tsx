@@ -15,7 +15,6 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { AspectRatio } from '@/components/ui/aspect-ratio';
-import { Badge } from '@/components/ui/badge';
 import {
   AlertDialog,
   AlertDialogAction,
@@ -92,13 +91,18 @@ interface UserPhoto {
 interface ProfileFormProps {
   profile: Profile;
   onUpdate: (profile: Profile) => void;
+  photos?: UserPhoto[];
 }
 
-export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
+export function ProfileForm({
+  profile,
+  onUpdate,
+  photos: initialPhotos,
+}: ProfileFormProps) {
   const [socialLinks, setSocialLinks] = useState<string[]>(
     profile.social_media || ['']
   );
-  const [photos, setPhotos] = useState<UserPhoto[]>([]);
+  const [photos, setPhotos] = useState<UserPhoto[]>(initialPhotos || []);
   const [uploading, setUploading] = useState(false);
   const [loading, setLoading] = useState(false);
   const [showConfirmation, setShowConfirmation] = useState(false);
@@ -129,8 +133,10 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
   const previousEvents = watch('previous_events');
 
   useEffect(() => {
-    fetchPhotos();
-  }, []);
+    if (!initialPhotos) {
+      fetchPhotos();
+    }
+  }, [initialPhotos]);
 
   const fetchPhotos = async () => {
     const { data, error } = await supabase
@@ -540,9 +546,9 @@ export function ProfileForm({ profile, onUpdate }: ProfileFormProps) {
                     />
                   </AspectRatio>
                   {photo.is_primary && (
-                    <Badge className="absolute top-2 left-2 bg-primary">
+                    <div className="absolute top-2 left-2 bg-primary text-primary-foreground text-xs font-medium uppercase tracking-wide px-2 py-1 rounded-sm">
                       Primary
-                    </Badge>
+                    </div>
                   )}
                   <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
                     {!photo.is_primary && !isSubmitted && (

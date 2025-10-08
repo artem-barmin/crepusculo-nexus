@@ -1,130 +1,13 @@
-import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { supabase } from '@/integrations/supabase/client';
-import { toast } from '@/hooks/use-toast';
 import { ProfileForm } from '@/components/ProfileForm';
 import { YourPass } from '@/components/YourPass';
-
-interface Profile {
-  id: string;
-  user_id: string;
-  username: string | null;
-  full_name: string | null;
-  birthday: string | null;
-  social_media: string[] | null;
-  introduction: string | null;
-  previous_events: string;
-  other_events: string | null;
-  why_join: string | null;
-  how_heard_about: string | null;
-  status: string;
-}
+import { useProfile } from '@/hooks/useProfile';
 
 export function Profile() {
-  const [profile, setProfile] = useState<Profile | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchProfile();
-  }, []);
-
-  const fetchProfile = async () => {
-    try {
-      const {
-        data: { user },
-      } = await supabase.auth.getUser();
-      if (!user) return;
-
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('*')
-        .eq('user_id', user.id)
-        .maybeSingle();
-
-      if (error) {
-        toast({
-          title: 'Error',
-          description: error.message,
-          variant: 'destructive',
-        });
-        return;
-      }
-
-      if (!data) {
-        // Create initial profile if it doesn't exist
-        const username = await generateUsernameFromEmail(user.email || '');
-        const { data: newProfile, error: insertError } = await supabase
-          .from('profiles')
-          .insert({
-            user_id: user.id,
-            username: username,
-            status: 'pending' as const,
-          })
-          .select()
-          .single();
-
-        if (insertError) {
-          toast({
-            title: 'Error',
-            description: insertError.message,
-            variant: 'destructive',
-          });
-          return;
-        }
-
-        setProfile(newProfile);
-      } else {
-        setProfile(data);
-      }
-    } catch (error) {
-      toast({
-        title: 'Error',
-        description: 'Failed to load profile',
-        variant: 'destructive',
-      });
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const generateUsernameFromEmail = async (email: string): Promise<string> => {
-    // Extract the part before @ from email
-    const emailPrefix = email.split('@')[0];
-    let username = emailPrefix;
-    let counter = 1;
-
-    // Check if username already exists in database
-    while (true) {
-      const { data, error } = await supabase
-        .from('profiles')
-        .select('username')
-        .eq('username', username)
-        .maybeSingle();
-
-      if (error) {
-        console.error('Error checking username:', error);
-        // If there's an error, return the original username with timestamp as fallback
-        return `${emailPrefix}_${Date.now()}`;
-      }
-
-      // If no existing username found, we can use this one
-      if (!data) {
-        return username;
-      }
-
-      // Username exists, try with counter
-      username = `${emailPrefix}_${counter}`;
-      counter++;
-
-      // Safety check to prevent infinite loop
-      if (counter > 1000) {
-        return `${emailPrefix}_${Date.now()}`;
-      }
-    }
-  };
+  const { profile, loading, fetchProfile, setProfile } = useProfile();
 
   if (loading) {
     return (
@@ -197,16 +80,15 @@ export function Profile() {
               className="flex items-center gap-2"
             >
               Your Pass
-              <Badge
-                variant="outline"
-                className={`text-xs text-white font-medium ${
+              <div
+                className={`text-xs text-white font-medium px-2 py-1 rounded-sm ${
                   profile.status === 'approved'
-                    ? 'bg-green-600 border-green-600 hover:bg-green-700'
+                    ? 'bg-green-600'
                     : profile.status === 'approved_plus'
-                      ? 'bg-purple-600 border-purple-600 hover:bg-purple-700'
+                      ? 'bg-purple-600'
                       : profile.status === 'rejected'
-                        ? 'bg-red-600 border-red-600 hover:bg-red-700'
-                        : 'bg-yellow-600 border-yellow-600 hover:bg-yellow-700'
+                        ? 'bg-red-600'
+                        : 'bg-yellow-600'
                 }`}
               >
                 {profile.status === 'approved'
@@ -216,7 +98,7 @@ export function Profile() {
                     : profile.status === 'rejected'
                       ? 'Rejected'
                       : 'Pending'}
-              </Badge>
+              </div>
             </TabsTrigger>
           </TabsList>
 
