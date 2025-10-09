@@ -8,6 +8,7 @@ import { ConductQuiz } from '@/pages/ConductQuiz';
 import { Profile } from '@/pages/Profile';
 import { useUserFlow } from '@/hooks/useUserFlow';
 import logo from '@/assets/logo_new.png';
+import './Index.css';
 
 const Index = () => {
   console.log('Index component is rendering...');
@@ -70,18 +71,18 @@ const Index = () => {
   // Show auth form centered on page
   if (showAuth) {
     return (
-      <div className="min-h-screen relative flex items-center justify-center bg-black">
+      <div className="min-h-screen relative flex flex-col items-center bg-black py-8">
         {/* Dark overlay */}
         <div className="absolute inset-0 bg-black/60" />
 
         {/* Centered content */}
         <div className="relative z-10 w-full max-w-md px-4">
           {/* Logo */}
-          <div className="mb-8 text-center">
+          <div className="mb-6 text-center">
             <img
               src={logo}
               alt="62 Crepusculo"
-              className="mx-auto h-16 w-auto mb-6"
+              className="mx-auto h-16 w-auto mb-4"
             />
           </div>
 
@@ -96,7 +97,7 @@ const Index = () => {
           />
 
           {/* Back button */}
-          <div className="mt-6 text-center">
+          <div className="mt-4 text-center">
             <button
               onClick={() => setShowAuth(false)}
               className="text-muted-foreground hover:text-foreground transition-colors underline"
@@ -110,29 +111,29 @@ const Index = () => {
   }
 
   return (
-    <div className="min-h-screen relative flex flex-col items-center justify-center bg-black">
+    <div className="min-h-screen relative flex flex-col items-center bg-black py-8 md:py-12">
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/60" />
 
       {/* Content */}
-      <div className="relative z-10 w-full max-w-4xl mx-auto px-4 text-center">
+      <div className="relative z-10 w-full max-w-4xl mx-auto px-2 sm:px-4 text-center">
         {/* Logo */}
-        <div className="mb-8">
+        <div className="mb-6">
           <img src={logo} alt="62 Crepusculo" className="mx-auto h-20 w-auto" />
         </div>
 
         {/* Main description - only show when not in auth mode */}
-        <div className="mb-12 max-w-3xl mx-auto text-left">
-          <h1 className="text-2xl md:text-3xl font-light mb-8 leading-relaxed text-center">
+        <div className="mb-8 max-w-3xl mx-auto text-left">
+          <h1 className="responsive-heading font-light mb-6 leading-normal text-center">
             Welcome to 62|Crepusculo
           </h1>
-          <div className="text-base md:text-lg font-light leading-relaxed space-y-4 text-foreground/90">
+          <div className="responsive-text font-light leading-normal space-y-3 text-foreground/90">
             <p>
               62|Crepusculo is a kinky community. We create a safe space for
               experiments and playing. To make sure everyone feels comfortable,
               we ask all members to follow a few simple but essential rules:
             </p>
-            <ul className="space-y-3 pt-4 pl-5 list-disc">
+            <ul className="space-y-2 pt-2 pl-5 list-disc">
               <li>
                 <strong>Respect & Consent</strong> — every interaction must be
                 consensual. Ask before touching, talking or joining in.
@@ -155,21 +156,20 @@ const Index = () => {
                 and respectful.
               </li>
             </ul>
-            <p className="pt-4">
+            <p className="pt-2">
               Together we keep 62 safe, free and inspiring.
             </p>
           </div>
         </div>
 
         {/* Auth buttons */}
-        <div className="space-y-4">
+        <div className="space-y-3">
           <Button
-            size="lg"
             onClick={() => {
               setAuthMode('signup');
               setShowAuth(true);
             }}
-            className="text-base px-8 py-3"
+            className="responsive-button"
           >
             I UNDERSTAND
           </Button>
