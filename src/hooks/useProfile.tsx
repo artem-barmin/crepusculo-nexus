@@ -2,7 +2,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
-interface Profile {
+export interface Profile {
   id: string;
   user_id: string;
   username: string | null;
@@ -10,6 +10,7 @@ interface Profile {
   birthday: string | null;
   social_media: string[] | null;
   introduction: string | null;
+  gender: 'Male' | 'Female' | 'Other' | null;
   previous_events: string;
   other_events: string | null;
   why_join: string | null;

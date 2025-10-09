@@ -5,9 +5,11 @@ import { ConductQuiz } from './ConductQuiz';
 import Index from './Index';
 import NotFound from './NotFound';
 import { ResetPassword } from './ResetPassword';
+import { ProfileTabs } from '@/components/ProfileTabs';
+import { Profile } from '@/hooks/useProfile';
 import { ProfileForm } from '@/components/ProfileForm';
 
-const sampleProfile = {
+const sampleProfile: Profile = {
   id: '16cdaefa-0de2-4b65-9085-d3bf1122dc80',
   user_id: '2a5db04d-e234-4dca-bd91-ed64e3f071de',
   username: 'bob.valentinov',
@@ -21,12 +23,10 @@ const sampleProfile = {
   how_heard_about: null,
   other_events: 'jhcjlhqwbcqlhjbwljhbwelhjdbwqelhd',
   why_join: 'lkjdckqjnekjnqwkeldnwqwknqwk;jdnqwek;jdnqwek;dbqwekdjbqwe;kdb',
-  created_at: '2025-08-20 15:14:05.982269+00',
-  updated_at: '2025-08-20 15:40:53.95511+00',
   status: 'approved',
 };
 
-const nonApprovedProfile = {
+const nonApprovedProfile: Profile = {
   ...sampleProfile,
   status: 'pending',
 };
@@ -65,7 +65,31 @@ const AllViews: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Approved User Profile</CardTitle>
+          <CardTitle>Approved User Profile Tabs</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProfileTabs
+            profile={sampleProfile}
+            setProfile={() => console.log('Profile updated')}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Non-Approved User Profile Tabs</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProfileTabs
+            profile={nonApprovedProfile}
+            setProfile={() => console.log('Profile updated')}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Approved User Profile Form</CardTitle>
         </CardHeader>
         <CardContent>
           <ProfileForm
@@ -78,7 +102,7 @@ const AllViews: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Non-Approved User Profile</CardTitle>
+          <CardTitle>Non-Approved User Profile Form</CardTitle>
         </CardHeader>
         <CardContent>
           <ProfileForm

@@ -75,23 +75,9 @@ const profileSchema = z.object({
   how_heard_about: z.string().optional(),
 });
 
-type ProfileFormData = z.infer<typeof profileSchema>;
+import { Profile } from '@/hooks/useProfile';
 
-interface Profile {
-  id: string;
-  user_id: string;
-  username: string | null;
-  full_name: string | null;
-  birthday: string | null;
-  social_media: string[] | null;
-  introduction: string | null;
-  gender: 'Male' | 'Female' | 'Other' | null;
-  previous_events: string;
-  other_events: string | null;
-  why_join: string | null;
-  how_heard_about: string | null;
-  status: string;
-}
+type ProfileFormData = z.infer<typeof profileSchema>;
 
 interface UserPhoto {
   id: string;
