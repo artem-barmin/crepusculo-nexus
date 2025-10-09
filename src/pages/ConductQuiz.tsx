@@ -174,20 +174,13 @@ export function ConductQuiz({ onComplete }: ConductQuizProps) {
       <div className="max-w-2xl mx-auto">
         <Card>
           <CardHeader>
-            <div className="flex justify-between items-center">
-              <div className="text-center flex-1">
+            <div className="flex justify-center items-center">
+              <div className="text-center">
                 <CardTitle>62|Crepusculo Rules Quiz</CardTitle>
                 <p className="text-muted-foreground">
                   Question {currentQuestion + 1} of {questions.length}
                 </p>
               </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={() => supabase.auth.signOut()}
-              >
-                Sign Out
-              </Button>
             </div>
           </CardHeader>
           <CardContent>

@@ -68,7 +68,7 @@ export function Profile() {
           }
           className="w-full"
         >
-          <TabsList className="grid w-full grid-cols-3">
+          <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 h-auto md:h-10">
             <TabsTrigger value="information">Information</TabsTrigger>
             <TabsTrigger value="conduct">62|Crepusculo Rules</TabsTrigger>
             <TabsTrigger
