@@ -25,16 +25,11 @@ export function CodeOfConduct({ onAccept }: CodeOfConductProps) {
           </Button>
         </div>
         <Card>
-          <CardHeader>
-            <CardTitle className="text-center text-2xl">
-              62|Crepusculo Rules
-            </CardTitle>
-          </CardHeader>
           <CardContent className="prose prose-invert max-w-none">
             <div className="space-y-6 text-foreground">
               <p className="text-lg">
                 Welcome to 62 Crepusculo. Before proceeding, please read and
-                understand our 62|Crepusculo Rules.
+                understand.
               </p>
 
               <div className="space-y-4">
