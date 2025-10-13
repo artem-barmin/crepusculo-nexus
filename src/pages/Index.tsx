@@ -127,6 +127,7 @@ const Index = () => {
           <h1 className="responsive-heading font-light mb-6 leading-normal text-center">
             Welcome to 62|Crepusculo
           </h1>
+          <h1>Hello from the new branch!</h1>
           <div className="responsive-text font-light leading-normal space-y-3 text-foreground/90">
             <p>
               62|Crepusculo is a kinky community. We create a safe space for
