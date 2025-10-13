@@ -6,62 +6,50 @@ on:
       - '**'
   workflow_dispatch:
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
-concurrency:
-  group: ${{ github.ref }}
-  cancel-in-progress: false
-
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+    permissions:
+      contents: write # Required to push to gh-pages branch
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
-      - name: Setup Node
+
+      - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
           node-version: '18'
           cache: 'npm'
-      
+
       - name: Install dependencies
         run: npm ci
-      
-      - name: Get branch name
-        id: branch-name
-        uses: tj-actions/branch-names@v8
 
-      - name: Set base URL
-        id: set-base-url
+      - name: Set deployment variables
+        id: set-vars
         run: |
-          if [ "${{ steps.branch-name.outputs.current_branch }}" = "main" ]; then
+          if [ "${{ github.ref_name }}" = "main" ]; then
             echo "BASE_URL=/" >> $GITHUB_ENV
+            echo "DEST_DIR=." >> $GITHUB_ENV
           else
-            echo "BASE_URL=/${{ steps.branch-name.outputs.current_branch }}" >> $GITHUB_ENV
+            # Sanitize branch name for URL (lowercase, alphanumeric)
+            BRANCH_NAME=$(echo "${{ github.ref_name }}" | tr '[:upper:]' '[:lower:]' | sed 's/[^a-z0-9-]//g')
+            echo "BASE_URL=/$BRANCH_NAME/" >> $GITHUB_ENV
+            echo "DEST_DIR=$BRANCH_NAME" >> $GITHUB_ENV
           fi
 
       - name: Build
         run: npm run build
         env:
-          GITHUB_PAGES: true
           BASE_URL: ${{ env.BASE_URL }}
-      
-      - name: Setup Pages
-        uses: actions/configure-pages@v4
-      
-      - name: Upload artifact
-        uses: actions/upload-pages-artifact@v3
-        with:
-          path: './dist'
 
-  deploy:
-    runs-on: ubuntu-latest
-    needs: build
-    steps:
       - name: Deploy to GitHub Pages
-        id: deployment
-        uses: actions/deploy-pages@v4
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./dist
+          destination_dir: ${{ env.DEST_DIR }}
+          keep_files: true # This is crucial to prevent deployments from overwriting each other
+          cname: ${{ github.ref_name == 'main' && '62.salon' || '' }}
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: "Deploy ${{ github.ref_name }} to ${{ env.DEST_DIR }}"
