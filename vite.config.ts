@@ -14,5 +14,5 @@ export default defineConfig(({ mode }) => ({
       '@': path.resolve(__dirname, './src'),
     },
   },
-  base: '/',
+  base: process.env.BASE_URL || '/',
 }));
