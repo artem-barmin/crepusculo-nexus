@@ -7,6 +7,7 @@ import Index from './pages/Index';
 import { ResetPassword } from './pages/ResetPassword';
 import NotFound from './pages/NotFound';
 import AllViews from './pages/AllViews';
+import Layout from './components/Layout';
 
 const queryClient = new QueryClient();
 
@@ -19,13 +20,15 @@ const App = () => {
         <Toaster />
         <Sonner />
         <BrowserRouter basename={import.meta.env.BASE_URL}>
-          <Routes>
-            <Route path="/" element={<Index />} />
-            <Route path="/reset-password" element={<ResetPassword />} />
-            <Route path="/all-views" element={<AllViews />} />
-            {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
-            <Route path="*" element={<NotFound />} />
-          </Routes>
+          <Layout>
+            <Routes>
+              <Route path="/" element={<Index />} />
+              <Route path="/reset-password" element={<ResetPassword />} />
+              <Route path="/all-views" element={<AllViews />} />
+              {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}
+              <Route path="*" element={<NotFound />} />
+            </Routes>
+          </Layout>
         </BrowserRouter>
       </TooltipProvider>
     </QueryClientProvider>

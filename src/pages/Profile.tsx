@@ -40,26 +40,24 @@ export function Profile() {
   }
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="mb-8 flex justify-between items-center">
-          <div>
-            <h1 className="text-3xl font-bold mb-2">Your Profile</h1>
-            <p className="text-muted-foreground">
-              Complete your profile to get access to 62 Crepusculo events
-            </p>
-          </div>
-          <Button
-            variant="outline"
-            onClick={() => supabase.auth.signOut()}
-            className="flex items-center gap-2"
-          >
-            Sign Out
-          </Button>
+    <div>
+      <div className="mb-8 flex justify-between items-center">
+        <div>
+          <h1 className="text-3xl font-bold mb-2">Your Profile</h1>
+          <p className="text-muted-foreground">
+            Complete your profile to get access to 62 Crepusculo events
+          </p>
         </div>
-
-        <ProfileTabs profile={profile} setProfile={setProfile} />
+        <Button
+          variant="outline"
+          onClick={() => supabase.auth.signOut()}
+          className="flex items-center gap-2"
+        >
+          Sign Out
+        </Button>
       </div>
+
+      <ProfileTabs profile={profile} setProfile={setProfile} />
     </div>
   );
 }

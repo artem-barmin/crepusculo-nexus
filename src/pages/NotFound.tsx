@@ -14,23 +14,21 @@ const NotFound = () => {
   }, [location.pathname]);
 
   return (
-    <div className="min-h-screen bg-background flex items-center justify-center p-4">
-      <Card className="w-full max-w-md text-center">
-        <CardHeader>
-          <CardTitle className="text-6xl font-bold flex items-center justify-center gap-4">
-            404 👻
-          </CardTitle>
-        </CardHeader>
-        <CardContent>
-          <p className="text-xl text-muted-foreground mb-6">
-            Oops! This page is lost in the shadows.
-          </p>
-          <Button asChild>
-            <Link to="/">Return to Home</Link>
-          </Button>
-        </CardContent>
-      </Card>
-    </div>
+    <Card className="w-full max-w-md text-center mx-auto">
+      <CardHeader>
+        <CardTitle className="text-6xl font-bold flex items-center justify-center gap-4">
+          404 👻
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <p className="text-xl text-muted-foreground mb-6">
+          Oops! This page is lost in the shadows.
+        </p>
+        <Button asChild>
+          <Link to="/">Return to Home</Link>
+        </Button>
+      </CardContent>
+    </Card>
   );
 };
 

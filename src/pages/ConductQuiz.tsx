@@ -170,74 +170,72 @@ export function ConductQuiz({ onComplete }: ConductQuizProps) {
   const question = questions[currentQuestion];
 
   return (
-    <div className="min-h-screen bg-background p-4">
-      <div className="max-w-2xl mx-auto">
-        <Card>
-          <CardHeader>
-            <div className="flex justify-center items-center">
-              <div className="text-center">
-                <CardTitle>62|Crepusculo Rules Quiz</CardTitle>
-                <p className="text-muted-foreground">
-                  Question {currentQuestion + 1} of {questions.length}
-                </p>
-              </div>
+    <div className="max-w-2xl mx-auto">
+      <Card>
+        <CardHeader>
+          <div className="flex justify-center items-center">
+            <div className="text-center">
+              <CardTitle>62|Crepusculo Rules Quiz</CardTitle>
+              <p className="text-muted-foreground">
+                Question {currentQuestion + 1} of {questions.length}
+              </p>
             </div>
-          </CardHeader>
-          <CardContent>
-            <div className="space-y-6">
-              <h3 className="text-lg font-medium">{question.question}</h3>
+          </div>
+        </CardHeader>
+        <CardContent>
+          <div className="space-y-6">
+            <h3 className="text-lg font-medium">{question.question}</h3>
 
-              <RadioGroup
-                value={answers[question.id]?.toString() || ''}
-                onValueChange={(value) =>
-                  handleAnswerChange(question.id, parseInt(value))
+            <RadioGroup
+              value={answers[question.id]?.toString() || ''}
+              onValueChange={(value) =>
+                handleAnswerChange(question.id, parseInt(value))
+              }
+            >
+              {question.options.map((option, index) => (
+                <div key={index} className="flex items-center space-x-2">
+                  <RadioGroupItem
+                    value={index.toString()}
+                    id={`option-${index}`}
+                  />
+                  <Label
+                    htmlFor={`option-${index}`}
+                    className="cursor-pointer"
+                  >
+                    {option}
+                  </Label>
+                </div>
+              ))}
+            </RadioGroup>
+
+            {errors[question.id] && (
+              <p className="text-destructive text-sm">
+                Please select the correct answer to continue.
+              </p>
+            )}
+
+            <div className="flex justify-between pt-4">
+              <Button
+                variant="outline"
+                onClick={() =>
+                  setCurrentQuestion((prev) => Math.max(0, prev - 1))
                 }
+                disabled={currentQuestion === 0}
               >
-                {question.options.map((option, index) => (
-                  <div key={index} className="flex items-center space-x-2">
-                    <RadioGroupItem
-                      value={index.toString()}
-                      id={`option-${index}`}
-                    />
-                    <Label
-                      htmlFor={`option-${index}`}
-                      className="cursor-pointer"
-                    >
-                      {option}
-                    </Label>
-                  </div>
-                ))}
-              </RadioGroup>
+                Previous
+              </Button>
 
-              {errors[question.id] && (
-                <p className="text-destructive text-sm">
-                  Please select the correct answer to continue.
-                </p>
-              )}
-
-              <div className="flex justify-between pt-4">
-                <Button
-                  variant="outline"
-                  onClick={() =>
-                    setCurrentQuestion((prev) => Math.max(0, prev - 1))
-                  }
-                  disabled={currentQuestion === 0}
-                >
-                  Previous
-                </Button>
-
-                <Button onClick={handleNext} disabled={loading}>
-                  {loading
-                    ? 'Submitting...'
-                    : currentQuestion === questions.length - 1
-                      ? 'Submit'
-                      : 'Next'}
-                </Button>
-              </div>
+              <Button onClick={handleNext} disabled={loading}>
+                {loading
+                  ? 'Submitting...'
+                  : currentQuestion === questions.length - 1
+                    ? 'Submit'
+                    : 'Next'}
+              </Button>
             </div>
-          </CardContent>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
   );
 }

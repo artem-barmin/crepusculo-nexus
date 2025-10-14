@@ -60,105 +60,105 @@ const samplePhotos = [
 
 const AllViews: React.FC = () => {
   return (
-    <div className="container mx-auto p-4 space-y-8">
+    <div className="space-y-8">
       <h1 className="text-3xl font-bold mb-6">All Page Views</h1>
 
       <Card>
-        <CardHeader>
-          <CardTitle>Approved User Profile Tabs</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ProfileTabs
-            profile={sampleProfile}
-            setProfile={() => console.log('Profile updated')}
-          />
-        </CardContent>
-      </Card>
+          <CardHeader>
+            <CardTitle>Approved User Profile Tabs</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProfileTabs
+              profile={sampleProfile}
+              setProfile={() => console.log('Profile updated')}
+            />
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Non-Approved User Profile Tabs</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ProfileTabs
-            profile={nonApprovedProfile}
-            setProfile={() => console.log('Profile updated')}
-          />
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Non-Approved User Profile Tabs</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProfileTabs
+              profile={nonApprovedProfile}
+              setProfile={() => console.log('Profile updated')}
+            />
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Approved User Profile Form</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ProfileForm
-            profile={sampleProfile}
-            photos={samplePhotos}
-            onUpdate={() => console.log('Profile updated')}
-          />
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Approved User Profile Form</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProfileForm
+              profile={sampleProfile}
+              photos={samplePhotos}
+              onUpdate={() => console.log('Profile updated')}
+            />
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Non-Approved User Profile Form</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ProfileForm
-            profile={nonApprovedProfile}
-            photos={samplePhotos}
-            onUpdate={() => console.log('Profile updated')}
-          />
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Non-Approved User Profile Form</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ProfileForm
+              profile={nonApprovedProfile}
+              photos={samplePhotos}
+              onUpdate={() => console.log('Profile updated')}
+            />
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Index Page</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <Index />
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Index Page</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <Index />
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Reset Password Page</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResetPassword />
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Reset Password Page</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ResetPassword />
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>62|Crepusculo Rules Page</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <CodeOfConduct
-            onAccept={() => console.log('62|Crepusculo Rules accepted')}
-          />
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>62|Crepusculo Rules Page</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <CodeOfConduct
+              onAccept={() => console.log('62|Crepusculo Rules accepted')}
+            />
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Conduct Quiz Page</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ConductQuiz onComplete={() => console.log('Quiz completed')} />
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Conduct Quiz Page</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <ConductQuiz onComplete={() => console.log('Quiz completed')} />
+          </CardContent>
+        </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Not Found Page</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <NotFound />
-        </CardContent>
-      </Card>
+        <Card>
+          <CardHeader>
+            <CardTitle>Not Found Page</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <NotFound />
+          </CardContent>
+        </Card>
     </div>
   );
 };
