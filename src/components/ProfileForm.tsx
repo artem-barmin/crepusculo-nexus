@@ -301,9 +301,9 @@ export function ProfileForm({
       return;
     }
 
-    setPhotos((prev) =>
-      prev.map((p) => ({ ...p, is_primary: p.id === photoId }))
-    );
+    // Re-fetch photos to ensure correct state
+    await fetchPhotos();
+
     toast({
       title: 'Primary photo updated',
       description: 'This photo is now your primary photo',
