@@ -38,7 +38,7 @@ const emptyProfile: Profile = {
   full_name: null,
   gender: null,
   birthday: null,
-  social_media: [''],
+  social_media: null,
   introduction: null,
   previous_events: 'no',
   how_heard_about: null,
