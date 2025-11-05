@@ -62,8 +62,8 @@ const profileSchema = z.object({
     return age >= 21;
   }, 'You must be at least 21 years old'),
   social_media: z
-    .array(z.string().url('Please enter a valid URL'))
-    .min(1, 'At least one social media link is required'),
+    .array(z.string().min(1, 'Please enter a valid link'))
+    .min(1, 'At least one link is required'),
   introduction: z
     .string()
     .min(50, 'Introduction must be at least 50 characters'),
@@ -542,16 +542,16 @@ export function ProfileForm({
 
             {/* Social Media */}
             <div>
-              <Label>Social Media Links *</Label>
+              <Label>WhatsApp or Instagram *</Label>
               <p className="text-xs text-muted-foreground mb-2">
-                Add at least one social media profile (must start with https://)
+                Add at least one WhatsApp number or Instagram profile
               </p>
               {socialLinks.map((link, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <Input
                     value={link}
                     onChange={(e) => updateSocialLink(index, e.target.value)}
-                    placeholder="https://instagram.com/username"
+                    placeholder="WhatsApp number or Instagram username"
                     disabled={isSubmitted}
                   />
                   {socialLinks.length > 1 && (
