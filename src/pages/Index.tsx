@@ -40,14 +40,19 @@ const Index = () => {
   if (loading || user) {
     // If user is authenticated, handle flow states directly
     if (user) {
-      if (flowState === 'code_of_conduct') {
-        return <CodeOfConduct onAccept={() => setFlowState('quiz')} />;
+      // Show code of conduct for approved users who need to take the quiz
+      if (flowState === 'approved_need_code_of_conduct') {
+        return (
+          <CodeOfConduct onAccept={() => setFlowState('approved_need_quiz')} />
+        );
       }
 
-      if (flowState === 'quiz') {
-        return <ConductQuiz onComplete={() => setFlowState('application')} />;
+      // Show quiz after code of conduct acceptance
+      if (flowState === 'approved_need_quiz') {
+        return <ConductQuiz onComplete={() => setFlowState('approved')} />;
       }
 
+      // All other states show the Profile page
       if (
         flowState === 'application' ||
         flowState === 'pending_approval' ||
