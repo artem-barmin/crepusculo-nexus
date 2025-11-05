@@ -31,6 +31,22 @@ const nonApprovedProfile: Profile = {
   status: 'pending',
 };
 
+const emptyProfile: Profile = {
+  id: 'empty-profile-id',
+  user_id: 'empty-user-id',
+  username: null,
+  full_name: null,
+  gender: null,
+  birthday: null,
+  social_media: null,
+  introduction: null,
+  previous_events: 'no',
+  how_heard_about: null,
+  other_events: null,
+  why_join: null,
+  status: 'incomplete',
+};
+
 const samplePhotos = [
   {
     id: 'c91f0cbf-5b27-4e31-b1ca-9e0401b7043c',
@@ -108,6 +124,19 @@ const AllViews: React.FC = () => {
           <ProfileForm
             profile={nonApprovedProfile}
             photos={samplePhotos}
+            onUpdate={() => console.log('Profile updated')}
+          />
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardHeader>
+          <CardTitle>Empty Profile Form (All Placeholders Visible)</CardTitle>
+        </CardHeader>
+        <CardContent>
+          <ProfileForm
+            profile={emptyProfile}
+            photos={[]}
             onUpdate={() => console.log('Profile updated')}
           />
         </CardContent>

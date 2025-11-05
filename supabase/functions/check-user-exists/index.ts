@@ -23,17 +23,19 @@ serve(async (req) => {
       });
     }
 
-    // Create admin client
-    const supabaseAdmin = createClient(
+    // Create Supabase client with service role key
+    const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
-    // Check if user exists in auth.users
-    const { data: users, error } = await supabaseAdmin.auth.admin.listUsers();
+    // Check if user exists using RPC function
+    const { data: userId, error } = await supabase.rpc('get_user_id_by_email', {
+      p_email: email,
+    });
 
     if (error) {
-      console.error('Error checking users:', error);
+      console.error('Error checking user:', error);
       return new Response(
         JSON.stringify({ error: 'Failed to check user existence' }),
         {
@@ -43,7 +45,11 @@ serve(async (req) => {
       );
     }
 
-    const userExists = users.users.some((user) => user.email === email);
+    const userExists = !!userId;
+    console.log(
+      `Checking ${email} got ${userExists}`,
+      userId ? `(user id: ${userId})` : ''
+    );
 
     return new Response(JSON.stringify({ exists: userExists }), {
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
