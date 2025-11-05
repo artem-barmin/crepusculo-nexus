@@ -551,7 +551,7 @@ export function ProfileForm({
                   <Input
                     value={link}
                     onChange={(e) => updateSocialLink(index, e.target.value)}
-                    placeholder="WhatsApp number or Instagram username"
+                    placeholder="e.g., +351912345678 or @instagram_username"
                     disabled={isSubmitted}
                   />
                   {socialLinks.length > 1 && (
