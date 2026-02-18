@@ -28,6 +28,15 @@ export function YourPass({ profile }: YourPassProps) {
         .in('id', profile.tag_ids!)
         .eq('visible_to_client', true);
 
+      console.log(
+        await supabase
+          .from('tags')
+          .select('id, label, color')
+          .in('id', profile.tag_ids!)
+      );
+
+      console.log(fetchTags);
+
       if (data) setVisibleTags(data);
     };
 
@@ -51,7 +60,11 @@ export function YourPass({ profile }: YourPassProps) {
             <Badge
               key={tag.id}
               variant="secondary"
-              style={tag.color ? { backgroundColor: tag.color, color: '#fff' } : undefined}
+              style={
+                tag.color
+                  ? { backgroundColor: tag.color, color: '#fff' }
+                  : undefined
+              }
             >
               {tag.label}
             </Badge>
