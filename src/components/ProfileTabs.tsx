@@ -12,11 +12,7 @@ interface ProfileTabsProps {
 export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
   return (
     <Tabs
-      defaultValue={
-        profile.status === 'approved' || profile.status === 'approved_plus'
-          ? 'pass'
-          : 'information'
-      }
+      defaultValue={profile.status === 'approved' ? 'pass' : 'information'}
       className="w-full"
     >
       <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 h-auto md:h-10">
@@ -24,9 +20,7 @@ export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
         <TabsTrigger value="conduct">62|Crepusculo Rules</TabsTrigger>
         <TabsTrigger
           value="pass"
-          disabled={
-            profile.status !== 'approved' && profile.status !== 'approved_plus'
-          }
+          disabled={profile.status !== 'approved'}
           className="flex items-center gap-2"
         >
           Your Pass
@@ -34,20 +28,16 @@ export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
             className={`text-xs text-white font-medium px-2 py-1 rounded-sm ${
               profile.status === 'approved'
                 ? 'bg-green-600'
-                : profile.status === 'approved_plus'
-                  ? 'bg-purple-600'
-                  : profile.status === 'rejected'
-                    ? 'bg-red-600'
-                    : 'bg-yellow-600'
+                : profile.status === 'rejected'
+                  ? 'bg-red-600'
+                  : 'bg-yellow-600'
             }`}
           >
             {profile.status === 'approved'
               ? '62 verified'
-              : profile.status === 'approved_plus'
-                ? '62 + Goosebumps verified'
-                : profile.status === 'rejected'
-                  ? 'Rejected'
-                  : 'Pending'}
+              : profile.status === 'rejected'
+                ? 'Not confirmed'
+                : 'Pending'}
           </div>
         </TabsTrigger>
       </TabsList>
@@ -132,7 +122,7 @@ export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
       </TabsContent>
 
       <TabsContent value="pass" className="mt-6">
-        {profile.status === 'approved' || profile.status === 'approved_plus' ? (
+        {profile.status === 'approved' ? (
           <YourPass profile={profile} />
         ) : (
           <Card>

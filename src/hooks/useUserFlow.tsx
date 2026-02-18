@@ -41,23 +41,16 @@ export function useUserFlow(user: User | null) {
         // New flow logic:
         // 1. If no profile, show application form
         // 2. If profile is pending, show pending state
-        // 3. If profile is approved/approved_plus and quiz not completed, show code of conduct then quiz
-        // 4. If profile is approved/approved_plus and quiz completed, show approved state
+        // 3. If profile is approved and quiz not completed, show code of conduct then quiz
+        // 4. If profile is approved and quiz completed, show approved state
 
         if (!profileData) {
           setFlowState('application');
         } else if (profileData.status === 'pending') {
           setFlowState('pending_approval');
-        } else if (
-          (profileData.status === 'approved' ||
-            profileData.status === 'approved_plus') &&
-          !quizData
-        ) {
+        } else if (profileData.status === 'approved' && !quizData) {
           setFlowState('approved_need_code_of_conduct');
-        } else if (
-          profileData.status === 'approved' ||
-          profileData.status === 'approved_plus'
-        ) {
+        } else if (profileData.status === 'approved') {
           setFlowState('approved');
         } else {
           setFlowState('application');

@@ -16,6 +16,7 @@ export interface Profile {
   why_join: string | null;
   how_heard_about: string | null;
   status: string;
+  tag_ids: number[] | null;
 }
 
 export function useProfile() {

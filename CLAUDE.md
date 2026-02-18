@@ -26,14 +26,14 @@ Vite + React + TypeScript app with Supabase backend. Uses shadcn/ui components, 
 
 | Table | Description |
 |---|---|
-| `profiles` | User profiles (status, gender, social_media, etc.) |
+| `profiles` | User profiles (status, gender, social_media, tag_ids, etc.) |
 | `user_photos` | User photo URLs with is_primary flag |
 | `code_of_conduct_tests` | Quiz answers and completion tracking |
-| `tags` | Tag definitions |
+| `tags` | Tag definitions (id, value, label, color). Referenced by `profiles.tag_ids` as `bigint[]` |
 
 ### Enums
 
-- `profile_status`: pending, approved, rejected, approved_plus
+- `profile_status`: pending, approved, rejected
 - `gender`: Male, Female, Other
 
 ## Commands

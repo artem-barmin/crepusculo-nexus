@@ -1,20 +1,14 @@
+import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Badge } from '@/components/ui/badge';
 import { QRCodeSVG } from 'qrcode.react';
+import { supabase } from '@/integrations/supabase/client';
+import { Profile } from '@/hooks/useProfile';
 
-interface Profile {
-  id: string;
-  user_id: string;
-  username: string | null;
-  full_name: string | null;
-  birthday: string | null;
-  social_media: string[] | null;
-  introduction: string | null;
-  previous_events: string;
-  other_events: string | null;
-  why_join: string | null;
-  how_heard_about: string | null;
-  status: string;
+interface Tag {
+  id: number;
+  label: string | null;
+  color: string | null;
 }
 
 interface YourPassProps {
@@ -22,6 +16,24 @@ interface YourPassProps {
 }
 
 export function YourPass({ profile }: YourPassProps) {
+  const [visibleTags, setVisibleTags] = useState<Tag[]>([]);
+
+  useEffect(() => {
+    if (!profile.tag_ids?.length) return;
+
+    const fetchTags = async () => {
+      const { data } = await supabase
+        .from('tags')
+        .select('id, label, color')
+        .in('id', profile.tag_ids!)
+        .eq('visible_to_client', true);
+
+      if (data) setVisibleTags(data);
+    };
+
+    fetchTags();
+  }, [profile.tag_ids]);
+
   // Create validation URL for QR code
   const validationUrl = `https://pnnapdxefbmafisglnfz.supabase.co/functions/v1/validate-pass?user_id=${profile.user_id}&event=62_crepusculo`;
 
@@ -29,19 +41,21 @@ export function YourPass({ profile }: YourPassProps) {
     <Card>
       <CardHeader>
         <CardTitle className="text-center">Your 62 Crepusculo Pass</CardTitle>
-        <div className="flex justify-center">
-          <Badge
-            variant="secondary"
-            className={
-              profile.status === 'approved_plus'
-                ? 'bg-purple-100 text-purple-800'
-                : 'bg-green-100 text-green-800'
-            }
-          >
-            {profile.status === 'approved_plus'
-              ? '62 + Goosebumps verified'
-              : '62 verified'}
-          </Badge>
+        <div className="flex justify-center gap-2 flex-wrap">
+          {profile.status === 'approved' && (
+            <Badge variant="secondary" className="bg-green-100 text-green-800">
+              62 verified
+            </Badge>
+          )}
+          {visibleTags.map((tag) => (
+            <Badge
+              key={tag.id}
+              variant="secondary"
+              style={tag.color ? { backgroundColor: tag.color, color: '#fff' } : undefined}
+            >
+              {tag.label}
+            </Badge>
+          ))}
         </div>
       </CardHeader>
       <CardContent>
