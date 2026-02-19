@@ -122,27 +122,6 @@ export function AuthForm({
   const handleSignUp = async (data: SignUpFormData) => {
     setLoading(true);
     try {
-      // First, check if user already exists using our edge function
-      const { data: checkResult, error: checkError } =
-        await supabase.functions.invoke('check-user-exists', {
-          body: { email: data.email },
-        });
-
-      if (checkError) {
-        console.error('Error checking user existence:', checkError);
-        // Continue with signup if check fails - fallback to original behavior
-      } else if (checkResult?.exists) {
-        // User already exists, show the dialog
-        setAlertContent({
-          title: 'Account Already Exists',
-          description: `An account with this email already exists. Would you like to sign in instead or reset your password?`,
-        });
-        setIsAlertOpen(true);
-        setLoading(false);
-        return;
-      }
-
-      // Proceed with signup if user doesn't exist
       const { error } = await supabase.auth.signUp({
         email: data.email,
         password: data.password,
@@ -152,27 +131,14 @@ export function AuthForm({
       });
 
       if (error) {
-        // Fallback check for error messages in case the function check missed something
-        if (
-          error.message.includes('already registered') ||
-          error.message.includes('already been registered') ||
-          error.message.includes('User already registered') ||
-          error.message.includes('already exists') ||
-          error.message.toLowerCase().includes('signup is disabled')
-        ) {
-          setAlertContent({
-            title: 'Account Already Exists',
-            description: `An account with this email already exists. Would you like to sign in instead or reset your password?`,
-          });
-          setIsAlertOpen(true);
-        } else {
-          toast({
-            title: 'Error',
-            description: error.message,
-            variant: 'destructive',
-          });
-        }
+        toast({
+          title: 'Error',
+          description: error.message,
+          variant: 'destructive',
+        });
       } else {
+        // Show the same message whether the user is new or already exists.
+        // This prevents email enumeration attacks.
         setAlertContent({
           title: 'Check your email',
           description:
@@ -413,30 +379,9 @@ export function AuthForm({
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            {alertContent.title === 'Account Already Exists' ? (
-              <div className="flex gap-2">
-                <AlertDialogAction
-                  onClick={() => {
-                    setIsAlertOpen(false);
-                    onToggleMode(); // Switch to sign in
-                  }}
-                >
-                  Sign In
-                </AlertDialogAction>
-                <AlertDialogAction
-                  onClick={() => {
-                    setIsAlertOpen(false);
-                    onShowReset(); // Show reset password
-                  }}
-                >
-                  Reset Password
-                </AlertDialogAction>
-              </div>
-            ) : (
-              <AlertDialogAction onClick={() => setIsAlertOpen(false)}>
-                OK
-              </AlertDialogAction>
-            )}
+            <AlertDialogAction onClick={() => setIsAlertOpen(false)}>
+              OK
+            </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>

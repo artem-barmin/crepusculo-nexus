@@ -43,8 +43,7 @@ export function YourPass({ profile }: YourPassProps) {
     fetchTags();
   }, [profile.tag_ids]);
 
-  // Create validation URL for QR code
-  const validationUrl = `https://pnnapdxefbmafisglnfz.supabase.co/functions/v1/validate-pass?user_id=${profile.user_id}&event=62_crepusculo`;
+  const qrValue = profile.user_id;
 
   return (
     <Card>
@@ -77,7 +76,7 @@ export function YourPass({ profile }: YourPassProps) {
           <div className="flex justify-center">
             <div className="p-4 bg-white rounded-lg shadow-lg">
               <QRCodeSVG
-                value={validationUrl}
+                value={qrValue}
                 size={200}
                 level="M"
                 includeMargin={true}

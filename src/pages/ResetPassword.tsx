@@ -89,14 +89,6 @@ export function ResetPassword() {
           }
         });
     } else {
-      // Check if we're just accessing the page directly (for testing)
-      if (!accessToken && !refreshToken && !type) {
-        console.log('No URL parameters found - direct access to reset page');
-        // For now, let's allow direct access for testing
-        setIsValidSession(true);
-        return;
-      }
-
       // No valid reset parameters, redirect to home
       toast({
         title: 'Invalid Link',
