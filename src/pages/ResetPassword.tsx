@@ -55,8 +55,9 @@ export function ResetPassword() {
   });
 
   useEffect(() => {
-    // Supabase sends recovery tokens as hash fragments (#access_token=...&type=recovery).
-    // The Supabase JS client automatically processes these and fires a PASSWORD_RECOVERY event.
+    let cancelled = false;
+
+    // Listen for PASSWORD_RECOVERY event (fires when Supabase processes recovery hash tokens)
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event) => {
@@ -65,18 +66,27 @@ export function ResetPassword() {
       }
     });
 
-    // If the URL doesn't contain recovery params, redirect immediately
-    const hash = window.location.hash;
-    if (!hash.includes('type=recovery')) {
-      toast({
-        title: 'Invalid Link',
-        description: 'This password reset link is invalid or has expired.',
-        variant: 'destructive',
-      });
-      navigate('/');
-    }
+    // Supabase client processes hash fragment tokens (#access_token=...&type=recovery)
+    // during initialization — before React mounts. By the time this runs, the hash is
+    // already consumed and the session is set. Check for an existing session as fallback.
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (cancelled) return;
+      if (session) {
+        setIsValidSession(true);
+      } else {
+        toast({
+          title: 'Invalid Link',
+          description: 'This password reset link is invalid or has expired.',
+          variant: 'destructive',
+        });
+        navigate('/');
+      }
+    });
 
-    return () => subscription.unsubscribe();
+    return () => {
+      cancelled = true;
+      subscription.unsubscribe();
+    };
   }, [navigate]);
 
   const handleResetPassword = async (data: ResetPasswordFormData) => {
