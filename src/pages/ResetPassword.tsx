@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useNavigate, useSearchParams } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useForm } from 'react-hook-form';
 import { zodResolver } from '@hookform/resolvers/zod';
 import * as z from 'zod';
@@ -48,7 +48,6 @@ export function ResetPassword() {
   const [loading, setLoading] = useState(false);
   const [isValidSession, setIsValidSession] = useState(false);
   const navigate = useNavigate();
-  const [searchParams] = useSearchParams();
 
   const form = useForm<ResetPasswordFormData>({
     resolver: zodResolver(resetPasswordSchema),
@@ -56,40 +55,19 @@ export function ResetPassword() {
   });
 
   useEffect(() => {
-    // Check if we have the necessary URL parameters for password reset
-    const accessToken = searchParams.get('access_token');
-    const refreshToken = searchParams.get('refresh_token');
-    const type = searchParams.get('type');
-
-    console.log('Reset password URL params:', {
-      accessToken: !!accessToken,
-      refreshToken: !!refreshToken,
-      type,
+    // Supabase sends recovery tokens as hash fragments (#access_token=...&type=recovery).
+    // The Supabase JS client automatically processes these and fires a PASSWORD_RECOVERY event.
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'PASSWORD_RECOVERY') {
+        setIsValidSession(true);
+      }
     });
 
-    if (type === 'recovery' && accessToken && refreshToken) {
-      // Set the session with the tokens from URL
-      supabase.auth
-        .setSession({
-          access_token: accessToken,
-          refresh_token: refreshToken,
-        })
-        .then(({ error }) => {
-          if (error) {
-            console.error('Error setting session:', error);
-            toast({
-              title: 'Error',
-              description:
-                'Invalid or expired reset link. Please request a new one.',
-              variant: 'destructive',
-            });
-            navigate('/');
-          } else {
-            setIsValidSession(true);
-          }
-        });
-    } else {
-      // No valid reset parameters, redirect to home
+    // If the URL doesn't contain recovery params, redirect immediately
+    const hash = window.location.hash;
+    if (!hash.includes('type=recovery')) {
       toast({
         title: 'Invalid Link',
         description: 'This password reset link is invalid or has expired.',
@@ -97,7 +75,9 @@ export function ResetPassword() {
       });
       navigate('/');
     }
-  }, [searchParams, navigate]);
+
+    return () => subscription.unsubscribe();
+  }, [navigate]);
 
   const handleResetPassword = async (data: ResetPasswordFormData) => {
     setLoading(true);
