@@ -7,20 +7,22 @@ Vite + React + TypeScript app with Supabase backend. Uses shadcn/ui components, 
 ## Supabase
 
 - **Project ref:** `pnnapdxefbmafisglnfz`
-- **CLI:** Always use `npx supabase` (no global install)
-- **No Docker in devcontainer** — local DB commands (`start`, `reset`, `db dump`) won't work. Always use `--linked` for remote operations.
+- **MCP only:** Use Supabase MCP tools (`mcp__supabase__*`) for ALL database operations. Do NOT use the Supabase CLI.
 
 ### Database Schema Changes
 
-**IMPORTANT:** For ANY database operation (adding tables, columns, enums, RLS policies, functions, indexes, etc.), always use the `/supabase-migrate` skill. This ensures the full workflow is followed: create migration, push to remote, regenerate types, and verify compilation.
+For ANY database operation (adding tables, columns, enums, RLS policies, functions, indexes, etc.):
 
-**Do NOT create migration files.** Always apply SQL directly to the remote database, then regenerate types.
+1. Execute SQL via `mcp__supabase__execute_sql` or `mcp__supabase__apply_migration`
+2. Regenerate TypeScript types via MCP
+3. Verify compilation with `npx tsc --noEmit`
+
+**Do NOT create migration files.** Apply SQL directly to the remote database, then regenerate types.
 
 ### Key Files
 
 - `src/integrations/supabase/client.ts` — Supabase client (auto-generated, do not edit)
-- `src/integrations/supabase/types.ts` — TypeScript types from DB schema (regenerated via CLI)
-- `supabase/config.toml` — project config
+- `src/integrations/supabase/types.ts` — TypeScript types from DB schema (regenerated via MCP)
 
 ### Current Tables
 
