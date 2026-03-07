@@ -10,7 +10,7 @@ export type Database = {
   // Allows to automatically instantiate createClient with right options
   // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
-    PostgrestVersion: "13.0.4"
+    PostgrestVersion: "14.1"
   }
   public: {
     Tables: {
@@ -103,6 +103,7 @@ export type Database = {
           color: string | null
           id: number
           label: string | null
+          shotgun_match: string | null
           value: string | null
           visible_to_client: boolean
         }
@@ -110,6 +111,7 @@ export type Database = {
           color?: string | null
           id?: number
           label?: string | null
+          shotgun_match?: string | null
           value?: string | null
           visible_to_client?: boolean
         }
@@ -117,6 +119,7 @@ export type Database = {
           color?: string | null
           id?: number
           label?: string | null
+          shotgun_match?: string | null
           value?: string | null
           visible_to_client?: boolean
         }
@@ -151,7 +154,7 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      get_user_id_by_email: { Args: { p_email: string }; Returns: string }
+      [_ in never]: never
     }
     Enums: {
       gender: "Male" | "Female" | "Other"

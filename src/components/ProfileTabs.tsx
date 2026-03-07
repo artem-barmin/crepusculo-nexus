@@ -2,6 +2,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { ProfileForm } from '@/components/ProfileForm';
 import { YourPass } from '@/components/YourPass';
+import { TicketsTab } from '@/components/TicketsTab';
 import { Profile } from '@/hooks/useProfile';
 
 interface ProfileTabsProps {
@@ -15,7 +16,7 @@ export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
       defaultValue={profile.status === 'approved' ? 'pass' : 'information'}
       className="w-full"
     >
-      <TabsList className="grid w-full grid-cols-1 md:grid-cols-3 h-auto md:h-10">
+      <TabsList className="grid w-full grid-cols-1 md:grid-cols-4 h-auto md:h-10">
         <TabsTrigger value="information">Information</TabsTrigger>
         <TabsTrigger value="conduct">62|Crepusculo Rules</TabsTrigger>
         <TabsTrigger
@@ -39,6 +40,13 @@ export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
                 ? 'Not confirmed'
                 : 'Pending'}
           </div>
+        </TabsTrigger>
+        <TabsTrigger
+          value="tickets"
+          disabled={profile.status !== 'approved'}
+          className="flex items-center gap-2"
+        >
+          Tickets
         </TabsTrigger>
       </TabsList>
 
@@ -144,6 +152,27 @@ export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
                       : 'Under Review'}
                   </span>
                 </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
+      </TabsContent>
+
+      <TabsContent value="tickets" className="mt-6">
+        {profile.status === 'approved' ? (
+          <TicketsTab profile={profile} />
+        ) : (
+          <Card>
+            <CardContent className="pt-6">
+              <div className="text-center py-8">
+                <div className="text-6xl mb-4">🔒</div>
+                <h3 className="text-lg font-semibold mb-2">
+                  Access Restricted
+                </h3>
+                <p className="text-muted-foreground">
+                  Tickets will be available after your profile is approved by
+                  our team.
+                </p>
               </div>
             </CardContent>
           </Card>
