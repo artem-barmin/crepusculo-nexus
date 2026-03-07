@@ -1,6 +1,5 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile } from '@/hooks/useProfile';
 
@@ -101,16 +100,9 @@ export function TicketsTab({ profile, stubEvents }: TicketsTabProps) {
   }
 
   return (
-    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+    <div className="space-y-6">
       {events.map((event) => (
         <Card key={event.slug} className="overflow-hidden">
-          {event.coverThumbnailUrl && (
-            <img
-              src={event.coverThumbnailUrl}
-              alt={event.name}
-              className="w-full h-48 object-cover"
-            />
-          )}
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">{event.name}</CardTitle>
             <p className="text-sm text-muted-foreground">
@@ -118,11 +110,13 @@ export function TicketsTab({ profile, stubEvents }: TicketsTabProps) {
             </p>
           </CardHeader>
           <CardContent>
-            <Button asChild className="w-full">
-              <a href={event.url} target="_blank" rel="noopener noreferrer">
-                Buy Ticket
-              </a>
-            </Button>
+            <iframe
+              src={`https://shotgun.live/events/${event.slug}?embedded=1`}
+              className="w-full border-0 rounded-md"
+              style={{ height: '600px' }}
+              allow="payment"
+              title={event.name}
+            />
           </CardContent>
         </Card>
       ))}
