@@ -2,12 +2,10 @@ import React from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { CodeOfConduct } from './CodeOfConduct';
 import { ConductQuiz } from './ConductQuiz';
-import Index from './Index';
-import NotFound from './NotFound';
-import { ResetPassword } from './ResetPassword';
 import { ProfileTabs } from '@/components/ProfileTabs';
 import { Profile } from '@/hooks/useProfile';
 import { ProfileForm } from '@/components/ProfileForm';
+import { TicketsTab } from '@/components/TicketsTab';
 
 const sampleProfile: Profile = {
   id: '16cdaefa-0de2-4b65-9085-d3bf1122dc80',
@@ -144,19 +142,32 @@ const AllViews: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>Index Page</CardTitle>
+          <CardTitle>Tickets Tab (Approved User)</CardTitle>
         </CardHeader>
         <CardContent>
-          <Index />
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>Reset Password Page</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <ResetPassword />
+          <TicketsTab
+            profile={sampleProfile}
+            stubEvents={[
+              {
+                name: 'sexto + a escuta',
+                startTime: '2026-02-27T19:00:00.000Z',
+                endTime: '2026-02-28T01:00:00.000Z',
+                coverThumbnailUrl:
+                  'https://res.cloudinary.com/shotgun/image/upload/c_limit,f_auto,fl_lossy,q_auto,w_1080/v1/production/artworks/Main_poster16x9_copy_q7wngl',
+                url: 'https://shotgun.live/events/sexto-a-escuta',
+                slug: 'sexto-a-escuta',
+              },
+              {
+                name: 'DIGGITALITY w/ Penelope and Andrii',
+                startTime: '2026-02-20T20:00:00.000Z',
+                endTime: '2026-02-21T02:00:00.000Z',
+                coverThumbnailUrl:
+                  'https://res.cloudinary.com/shotgun/image/upload/c_limit,f_auto,fl_lossy,q_auto,w_1080/v1/production/artworks/Slide_16_9_-_3_ndlktf',
+                url: 'https://shotgun.live/events/diggitality-w-penelope-and-andrii',
+                slug: 'diggitality-w-penelope-and-andrii',
+              },
+            ]}
+          />
         </CardContent>
       </Card>
 
@@ -180,14 +191,6 @@ const AllViews: React.FC = () => {
         </CardContent>
       </Card>
 
-      <Card>
-        <CardHeader>
-          <CardTitle>Not Found Page</CardTitle>
-        </CardHeader>
-        <CardContent>
-          <NotFound />
-        </CardContent>
-      </Card>
     </div>
   );
 };

@@ -15,14 +15,17 @@ interface ShotgunEvent {
 
 interface TicketsTabProps {
   profile: Profile;
+  stubEvents?: ShotgunEvent[];
 }
 
-export function TicketsTab({ profile }: TicketsTabProps) {
-  const [events, setEvents] = useState<ShotgunEvent[]>([]);
-  const [loading, setLoading] = useState(true);
+export function TicketsTab({ profile, stubEvents }: TicketsTabProps) {
+  const [events, setEvents] = useState<ShotgunEvent[]>(stubEvents || []);
+  const [loading, setLoading] = useState(!stubEvents);
   const [error, setError] = useState<string | null>(null);
 
   useEffect(() => {
+    if (stubEvents) return;
+
     const fetchEvents = async () => {
       setLoading(true);
       setError(null);
@@ -42,7 +45,7 @@ export function TicketsTab({ profile }: TicketsTabProps) {
     };
 
     fetchEvents();
-  }, [profile.tag_ids]);
+  }, [profile.tag_ids, stubEvents]);
 
   const formatDate = (dateStr: string) => {
     const date = new Date(dateStr);
