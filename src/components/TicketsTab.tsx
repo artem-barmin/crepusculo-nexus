@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile } from '@/hooks/useProfile';
 
@@ -21,6 +22,7 @@ export function TicketsTab({ profile, stubEvents }: TicketsTabProps) {
   const [events, setEvents] = useState<ShotgunEvent[]>(stubEvents || []);
   const [loading, setLoading] = useState(!stubEvents);
   const [error, setError] = useState<string | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<ShotgunEvent | null>(null);
 
   useEffect(() => {
     if (stubEvents) return;
@@ -99,10 +101,52 @@ export function TicketsTab({ profile, stubEvents }: TicketsTabProps) {
     );
   }
 
+  if (selectedEvent) {
+    return (
+      <div className="space-y-4">
+        <Button
+          variant="ghost"
+          onClick={() => setSelectedEvent(null)}
+          className="mb-2"
+        >
+          &larr; Back to events
+        </Button>
+        <Card className="overflow-hidden">
+          <CardHeader className="pb-2">
+            <CardTitle>{selectedEvent.name}</CardTitle>
+            <p className="text-sm text-muted-foreground">
+              {formatDate(selectedEvent.startTime)}
+            </p>
+          </CardHeader>
+          <CardContent>
+            <iframe
+              src={`https://shotgun.live/events/${selectedEvent.slug}?embedded=1`}
+              className="w-full border-0 rounded-md"
+              style={{ height: '600px' }}
+              allow="payment"
+              title={selectedEvent.name}
+            />
+          </CardContent>
+        </Card>
+      </div>
+    );
+  }
+
   return (
-    <div className="space-y-6">
+    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
       {events.map((event) => (
-        <Card key={event.slug} className="overflow-hidden">
+        <Card
+          key={event.slug}
+          className="overflow-hidden cursor-pointer transition-transform hover:scale-[1.02]"
+          onClick={() => setSelectedEvent(event)}
+        >
+          {event.coverThumbnailUrl && (
+            <img
+              src={event.coverThumbnailUrl}
+              alt={event.name}
+              className="w-full h-48 object-cover"
+            />
+          )}
           <CardHeader className="pb-2">
             <CardTitle className="text-lg">{event.name}</CardTitle>
             <p className="text-sm text-muted-foreground">
@@ -110,13 +154,7 @@ export function TicketsTab({ profile, stubEvents }: TicketsTabProps) {
             </p>
           </CardHeader>
           <CardContent>
-            <iframe
-              src={`https://shotgun.live/events/${event.slug}?embedded=1`}
-              className="w-full border-0 rounded-md"
-              style={{ height: '600px' }}
-              allow="payment"
-              title={event.name}
-            />
+            <Button className="w-full">Get Ticket</Button>
           </CardContent>
         </Card>
       ))}
