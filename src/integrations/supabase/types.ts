@@ -154,7 +154,10 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      profile_is_filled: {
+        Args: { p: Database["public"]["Tables"]["profiles"]["Row"] }
+        Returns: boolean
+      }
     }
     Enums: {
       gender: "Male" | "Female" | "Other"

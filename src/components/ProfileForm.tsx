@@ -336,7 +336,6 @@ export function ProfileForm({
           why_join: data.why_join,
           how_heard_about:
             data.previous_events === 'no' ? data.how_heard_about : null,
-          status: 'pending' as const,
           gender: data.gender,
         })
         .eq('id', profile.id)
@@ -384,12 +383,11 @@ export function ProfileForm({
     setSocialLinks(profile.social_media || ['']);
   };
 
-  // Check if profile is submitted and not in editing mode
-  const isSubmitted = profile.status === 'pending' && !isEditing;
-  const canEdit =
-    profile.status === 'pending' ||
-    profile.status === 'approved' ||
-    profile.status === 'rejected';
+  const isPending = profile.status === 'pending';
+  const isApproved = profile.status === 'approved';
+  const isRejected = profile.status === 'rejected';
+  const isSubmitted = isPending && !isEditing;
+  const canEdit = (isPending || isApproved) && !isEditing;
 
   return (
     <Card>
@@ -401,8 +399,8 @@ export function ProfileForm({
         </p>
       </CardHeader>
       <CardContent>
-        {/* Status Message for Submitted Profile */}
-        {isSubmitted && (
+        {/* Pending — under review */}
+        {isPending && !isEditing && (
           <div className="mb-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
             <div className="flex items-center gap-2 mb-2">
               <CheckCircle className="h-5 w-5 text-blue-600" />
@@ -415,16 +413,56 @@ export function ProfileForm({
               will receive an email notification once our team has processed
               your application.
             </p>
-            {canEdit && (
-              <Button
-                type="button"
-                variant="outline"
-                onClick={handleEditProfile}
-                className="mt-3"
-              >
-                Edit Profile
-              </Button>
-            )}
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleEditProfile}
+              className="mt-3"
+            >
+              Edit Profile
+            </Button>
+          </div>
+        )}
+
+        {/* Approved — editable but warns about reset */}
+        {isApproved && !isEditing && (
+          <div className="mb-6 p-4 bg-green-50 border border-green-200 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <CheckCircle className="h-5 w-5 text-green-600" />
+              <h3 className="font-semibold text-green-900">Profile Approved</h3>
+            </div>
+            <p className="text-green-800 text-sm">
+              Your profile is approved. Editing it will reset the status to
+              pending review until our team re-approves it.
+            </p>
+            <Button
+              type="button"
+              variant="outline"
+              onClick={handleEditProfile}
+              className="mt-3"
+            >
+              Edit Profile
+            </Button>
+          </div>
+        )}
+
+        {/* Rejected — no form, contact email */}
+        {isRejected && (
+          <div className="mb-6 p-4 bg-red-50 border border-red-200 rounded-lg">
+            <div className="flex items-center gap-2 mb-2">
+              <X className="h-5 w-5 text-red-600" />
+              <h3 className="font-semibold text-red-900">
+                Application Not Approved
+              </h3>
+            </div>
+            <p className="text-red-800 text-sm">
+              Your application has not been approved. To request reconsideration,
+              please email{' '}
+              <a className="underline" href="mailto:appeal@62.salon">
+                appeal@62.salon
+              </a>
+              .
+            </p>
           </div>
         )}
 
@@ -444,6 +482,7 @@ export function ProfileForm({
           </div>
         )}
 
+        {!isRejected && (
         <Form {...form}>
           <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
             {/* Username (editable) */}
@@ -795,6 +834,7 @@ export function ProfileForm({
             )}
           </form>
         </Form>
+        )}
       </CardContent>
 
       {/* Confirmation Dialog */}
