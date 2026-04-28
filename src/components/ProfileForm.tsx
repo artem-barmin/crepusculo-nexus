@@ -37,7 +37,10 @@ import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
 
 const profileSchema = z.object({
-  gender: z.enum(['Male', 'Female', 'Other']),
+  gender: z.enum(['Male', 'Female', 'Other'], {
+    required_error: 'Please select a gender',
+    invalid_type_error: 'Please select a gender',
+  }),
   username: z
     .string()
     .min(3, 'Username must be at least 3 characters')
@@ -47,27 +50,30 @@ const profileSchema = z.object({
       'Username can only contain letters, numbers, dots, hyphens, and underscores'
     ),
   full_name: z.string().min(2, 'Full name must be at least 2 characters'),
-  birthday: z.string().refine((date) => {
-    const birthDate = new Date(date);
-    const today = new Date();
-    const age = today.getFullYear() - birthDate.getFullYear();
-    const monthDiff = today.getMonth() - birthDate.getMonth();
+  birthday: z
+    .string()
+    .min(1, 'Birthday is required')
+    .refine((date) => {
+      const birthDate = new Date(date);
+      const today = new Date();
+      const age = today.getFullYear() - birthDate.getFullYear();
+      const monthDiff = today.getMonth() - birthDate.getMonth();
 
-    if (
-      monthDiff < 0 ||
-      (monthDiff === 0 && today.getDate() < birthDate.getDate())
-    ) {
-      return age - 1 >= 21;
-    }
-    return age >= 21;
-  }, 'You must be at least 21 years old'),
+      if (
+        monthDiff < 0 ||
+        (monthDiff === 0 && today.getDate() < birthDate.getDate())
+      ) {
+        return age - 1 >= 21;
+      }
+      return age >= 21;
+    }, 'You must be at least 21 years old'),
   social_media: z
     .array(z.string().min(1, 'Please enter a valid link'))
     .min(1, 'At least one link is required'),
   introduction: z
     .string()
     .min(50, 'Introduction must be at least 50 characters'),
-  previous_events: z.string(),
+  previous_events: z.string().min(1, 'Please select an option'),
   other_events: z.string().optional(),
   why_join: z
     .string()
@@ -117,7 +123,7 @@ export function ProfileForm({
       gender: profile.gender || undefined,
       social_media: profile.social_media || [''],
       introduction: profile.introduction || '',
-      previous_events: profile.previous_events || 'no',
+      previous_events: profile.previous_events || '',
       other_events: profile.other_events || '',
       why_join: profile.why_join || '',
       how_heard_about: profile.how_heard_about || '',
@@ -376,7 +382,7 @@ export function ProfileForm({
     setValue('social_media', profile.social_media || ['']);
     setValue('introduction', profile.introduction || '');
     setValue('gender', profile.gender || undefined);
-    setValue('previous_events', profile.previous_events || 'no');
+    setValue('previous_events', profile.previous_events || '');
     setValue('other_events', profile.other_events || '');
     setValue('why_join', profile.why_join || '');
     setValue('how_heard_about', profile.how_heard_about || '');
@@ -733,7 +739,9 @@ export function ProfileForm({
               </Label>
               <Select
                 value={watch('previous_events')}
-                onValueChange={(value) => setValue('previous_events', value)}
+                onValueChange={(value) =>
+                  setValue('previous_events', value, { shouldValidate: true })
+                }
                 disabled={!isEditing}
               >
                 <SelectTrigger>
@@ -747,6 +755,11 @@ export function ProfileForm({
                   </SelectItem>
                 </SelectContent>
               </Select>
+              {errors.previous_events && (
+                <p className="text-destructive text-sm mt-1">
+                  {errors.previous_events.message}
+                </p>
+              )}
             </div>
 
             {/* How heard about (conditional) */}
