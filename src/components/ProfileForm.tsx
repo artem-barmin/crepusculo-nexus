@@ -386,8 +386,6 @@ export function ProfileForm({
   const isPending = profile.status === 'pending';
   const isApproved = profile.status === 'approved';
   const isRejected = profile.status === 'rejected';
-  const isSubmitted = isPending && !isEditing;
-  const canEdit = (isPending || isApproved) && !isEditing;
 
   return (
     <Card>
@@ -492,7 +490,7 @@ export function ProfileForm({
                 id="username"
                 {...register('username')}
                 placeholder="Enter your username"
-                disabled={isSubmitted}
+                disabled={!isEditing}
               />
               {errors.username && (
                 <p className="text-destructive text-sm mt-1">
@@ -512,7 +510,7 @@ export function ProfileForm({
                 id="full_name"
                 {...register('full_name')}
                 placeholder="Enter your full name"
-                disabled={isSubmitted}
+                disabled={!isEditing}
               />
               {errors.full_name && (
                 <p className="text-destructive text-sm mt-1">
@@ -533,7 +531,7 @@ export function ProfileForm({
                       onValueChange={field.onChange}
                       defaultValue={field.value}
                       className="flex flex-col space-y-1"
-                      disabled={isSubmitted}
+                      disabled={!isEditing}
                     >
                       <FormItem className="flex items-center space-x-3 space-y-0">
                         <FormControl>
@@ -567,7 +565,7 @@ export function ProfileForm({
                 id="birthday"
                 type="date"
                 {...register('birthday')}
-                disabled={isSubmitted}
+                disabled={!isEditing}
               />
               {errors.birthday && (
                 <p className="text-destructive text-sm mt-1">
@@ -591,7 +589,7 @@ export function ProfileForm({
                     value={link}
                     onChange={(e) => updateSocialLink(index, e.target.value)}
                     placeholder="e.g., +351912345678 or @instagram_username"
-                    disabled={isSubmitted}
+                    disabled={!isEditing}
                   />
                   {socialLinks.length > 1 && (
                     <Button
@@ -599,7 +597,7 @@ export function ProfileForm({
                       variant="outline"
                       size="icon"
                       onClick={() => removeSocialLink(index)}
-                      disabled={isSubmitted}
+                      disabled={!isEditing}
                     >
                       <X className="h-4 w-4" />
                     </Button>
@@ -611,7 +609,7 @@ export function ProfileForm({
                 variant="outline"
                 onClick={addSocialLink}
                 className="mt-2"
-                disabled={isSubmitted}
+                disabled={!isEditing}
               >
                 Add Another Link
               </Button>
@@ -655,7 +653,7 @@ export function ProfileForm({
                       </div>
                     )}
                     <div className="absolute inset-0 bg-black/50 opacity-0 group-hover:opacity-100 transition-opacity rounded-lg flex items-center justify-center gap-2">
-                      {!photo.is_primary && !isSubmitted && (
+                      {!photo.is_primary && isEditing && (
                         <Button
                           type="button"
                           size="sm"
@@ -665,7 +663,7 @@ export function ProfileForm({
                           <User className="h-4 w-4" />
                         </Button>
                       )}
-                      {!isSubmitted && (
+                      {isEditing && (
                         <Button
                           type="button"
                           size="sm"
@@ -679,7 +677,7 @@ export function ProfileForm({
                   </div>
                 ))}
 
-                {photos.length < 5 && !isSubmitted && (
+                {photos.length < 5 && isEditing && (
                   <AspectRatio ratio={1 / 1}>
                     <label className="border-2 border-dashed border-muted-foreground/25 rounded-lg flex flex-col items-center justify-center cursor-pointer hover:bg-muted/50 transition-colors w-full h-full">
                       <Upload className="h-6 w-6 mb-2 text-muted-foreground" />
@@ -697,7 +695,7 @@ export function ProfileForm({
                             handlePhotoUpload(files);
                           }
                         }}
-                        disabled={uploading || isSubmitted}
+                        disabled={uploading || !isEditing}
                       />
                     </label>
                   </AspectRatio>
@@ -719,7 +717,7 @@ export function ProfileForm({
                 {...register('introduction')}
                 placeholder="Tell us about yourself..."
                 rows={4}
-                disabled={isSubmitted}
+                disabled={!isEditing}
               />
               {errors.introduction && (
                 <p className="text-destructive text-sm mt-1">
@@ -736,7 +734,7 @@ export function ProfileForm({
               <Select
                 value={watch('previous_events')}
                 onValueChange={(value) => setValue('previous_events', value)}
-                disabled={isSubmitted}
+                disabled={!isEditing}
               >
                 <SelectTrigger>
                   <SelectValue placeholder="Select an option" />
@@ -763,7 +761,7 @@ export function ProfileForm({
                   {...register('how_heard_about')}
                   placeholder="Tell us how you discovered 62 Crepusculo..."
                   rows={3}
-                  disabled={isSubmitted}
+                  disabled={!isEditing}
                 />
                 {errors.how_heard_about && (
                   <p className="text-destructive text-sm mt-1">
@@ -784,7 +782,7 @@ export function ProfileForm({
                 {...register('other_events')}
                 placeholder="List any other sex-positive events you've attended..."
                 rows={3}
-                disabled={isSubmitted}
+                disabled={!isEditing}
               />
             </div>
 
@@ -798,7 +796,7 @@ export function ProfileForm({
                 {...register('why_join')}
                 placeholder="Tell us why you want to be part of 62 Crepusculo..."
                 rows={4}
-                disabled={isSubmitted}
+                disabled={!isEditing}
               />
               {errors.why_join && (
                 <p className="text-destructive text-sm mt-1">
@@ -808,7 +806,7 @@ export function ProfileForm({
             </div>
 
             {/* Submit/Edit Buttons */}
-            {!isSubmitted ? (
+            {isEditing ? (
               <Button
                 type="submit"
                 className="w-full"
