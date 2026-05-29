@@ -13,7 +13,7 @@ interface ProfileTabsProps {
 export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
   return (
     <Tabs
-      defaultValue={profile.status === 'approved' ? 'pass' : 'information'}
+      defaultValue={profile.status === 'approved' ? 'tickets' : 'information'}
       className="w-full"
     >
       <TabsList className="grid w-full grid-cols-1 md:grid-cols-4 h-auto md:h-10">
@@ -144,14 +144,13 @@ export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
                   Your pass will be available after your profile is approved by
                   our team.
                 </p>
-                <div className="mt-4 px-4 py-2 bg-muted rounded-lg inline-block">
-                  <span className="text-sm font-medium">
-                    Status:{' '}
-                    {profile.status === 'pending'
-                      ? 'Pending Approval'
-                      : 'Under Review'}
-                  </span>
-                </div>
+                {profile.status === 'pending' && (
+                  <div className="mt-4 px-4 py-2 bg-muted rounded-lg inline-block">
+                    <span className="text-sm font-medium">
+                      Status: Pending Approval
+                    </span>
+                  </div>
+                )}
               </div>
             </CardContent>
           </Card>

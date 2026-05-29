@@ -45,9 +45,11 @@ export function Profile() {
         <div className="mb-8 flex justify-between items-center">
           <div>
             <h1 className="text-3xl font-bold mb-2">Your Profile</h1>
-            <p className="text-muted-foreground">
-              Complete your profile to get access to 62 Crepusculo events
-            </p>
+            {profile.status !== 'approved' && (
+              <p className="text-muted-foreground">
+                Complete your profile to get access to 62 Crepusculo events
+              </p>
+            )}
           </div>
           <Button
             variant="outline"
