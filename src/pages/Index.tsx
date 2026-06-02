@@ -7,7 +7,6 @@ import { CodeOfConduct } from '@/pages/CodeOfConduct';
 import { ConductQuiz } from '@/pages/ConductQuiz';
 import { Profile } from '@/pages/Profile';
 import { useUserFlow } from '@/hooks/useUserFlow';
-import logo from '@/assets/logo_new.png';
 import './Index.css';
 
 const Index = () => {
@@ -82,15 +81,6 @@ const Index = () => {
 
         {/* Centered content */}
         <div className="relative z-10 w-full max-w-md px-4">
-          {/* Logo */}
-          <div className="mb-6 text-center">
-            <img
-              src={logo}
-              alt="62 Crepusculo"
-              className="mx-auto h-16 w-auto mb-4"
-            />
-          </div>
-
           {/* Auth Form */}
           <AuthForm
             mode={authMode}
@@ -122,19 +112,14 @@ const Index = () => {
 
       {/* Content */}
       <div className="relative z-10 w-full max-w-4xl mx-auto px-2 sm:px-4 text-center">
-        {/* Logo */}
-        <div className="mb-6">
-          <img src={logo} alt="62 Crepusculo" className="mx-auto h-20 w-auto" />
-        </div>
-
         {/* Main description - only show when not in auth mode */}
         <div className="mb-8 max-w-3xl mx-auto text-left">
           <h1 className="responsive-heading font-light mb-6 leading-normal text-center">
-            Welcome to 62|Crepusculo
+            Welcome to Crepusculo
           </h1>
           <div className="responsive-text font-light leading-normal space-y-3 text-foreground/90">
             <p>
-              62|Crepusculo is a kinky community. We create a safe space for
+              Crepusculo is a kinky community. We create a safe space for
               experiments and playing. To make sure everyone feels comfortable,
               we ask all members to follow a few simple but essential rules:
             </p>
@@ -153,7 +138,7 @@ const Index = () => {
               </li>
               <li>
                 <strong>Safe Space</strong> — if you feel uncomfortable or see
-                inappropriate behavior, report it to the 62|Crepusculo safe
+                inappropriate behavior, report it to the Crepusculo safe
                 team.
               </li>
               <li>
@@ -162,7 +147,7 @@ const Index = () => {
               </li>
             </ul>
             <p className="pt-2">
-              Together we keep 62 safe, free and inspiring.
+              Together we keep Crepusculo safe, free and inspiring.
             </p>
           </div>
         </div>

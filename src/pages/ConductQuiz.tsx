@@ -114,7 +114,7 @@ export function ConductQuiz({ onComplete }: ConductQuizProps) {
       setErrors((prev) => ({ ...prev, [question.id]: true }));
       toast({
         title: 'Incorrect answer',
-        description: 'Please review the 62|Crepusculo Rules and try again.',
+        description: 'Please review the Crepusculo Rules and try again.',
         variant: 'destructive',
       });
       return false;
@@ -176,7 +176,7 @@ export function ConductQuiz({ onComplete }: ConductQuizProps) {
           <CardHeader>
             <div className="flex justify-center items-center">
               <div className="text-center">
-                <CardTitle>62|Crepusculo Rules Quiz</CardTitle>
+                <CardTitle>Crepusculo Rules Quiz</CardTitle>
                 <p className="text-muted-foreground">
                   Question {currentQuestion + 1} of {questions.length}
                 </p>

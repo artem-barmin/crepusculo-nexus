@@ -194,7 +194,7 @@ export function AuthForm({
       case 'signin':
         return 'Sign In';
       case 'signup':
-        return 'Join 62 Crepusculo';
+        return 'Join Crepusculo';
       case 'reset':
         return 'Reset Password';
       default:

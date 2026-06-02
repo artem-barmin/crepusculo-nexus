@@ -398,7 +398,7 @@ export function ProfileForm({
       <CardHeader>
         <CardTitle>Profile Information</CardTitle>
         <p className="text-sm text-muted-foreground">
-          Complete all fields to submit your application for 62 Crepusculo
+          Complete all fields to submit your application for Crepusculo
           events
         </p>
       </CardHeader>
@@ -735,7 +735,7 @@ export function ProfileForm({
             {/* Previous Events */}
             <div>
               <Label htmlFor="previous_events">
-                Did you already attend any 62 Crepusculo events? *
+                Did you already attend any Crepusculo events? *
               </Label>
               <Select
                 value={watch('previous_events')}
@@ -766,13 +766,13 @@ export function ProfileForm({
             {previousEvents === 'no' && (
               <div>
                 <Label htmlFor="how_heard_about">
-                  How did you hear about our event / Who recommended 62
-                  Crepusculo to you? *
+                  How did you hear about our event / Who recommended Crepusculo
+                  to you? *
                 </Label>
                 <Textarea
                   id="how_heard_about"
                   {...register('how_heard_about')}
-                  placeholder="Tell us how you discovered 62 Crepusculo..."
+                  placeholder="Tell us how you discovered Crepusculo..."
                   rows={3}
                   disabled={!isEditing}
                 />
@@ -802,12 +802,12 @@ export function ProfileForm({
             {/* Why Join */}
             <div>
               <Label htmlFor="why_join">
-                Why do you want to join 62 Crepusculo? *
+                Why do you want to join Crepusculo? *
               </Label>
               <Textarea
                 id="why_join"
                 {...register('why_join')}
-                placeholder="Tell us why you want to be part of 62 Crepusculo..."
+                placeholder="Tell us why you want to be part of Crepusculo..."
                 rows={4}
                 disabled={!isEditing}
               />

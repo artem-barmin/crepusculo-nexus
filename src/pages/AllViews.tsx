@@ -173,11 +173,11 @@ const AllViews: React.FC = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>62|Crepusculo Rules Page</CardTitle>
+          <CardTitle>Crepusculo Rules Page</CardTitle>
         </CardHeader>
         <CardContent>
           <CodeOfConduct
-            onAccept={() => console.log('62|Crepusculo Rules accepted')}
+            onAccept={() => console.log('Crepusculo Rules accepted')}
           />
         </CardContent>
       </Card>

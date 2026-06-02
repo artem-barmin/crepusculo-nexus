@@ -47,7 +47,7 @@ export function Profile() {
             <h1 className="text-3xl font-bold mb-2">Your Profile</h1>
             {profile.status !== 'approved' && (
               <p className="text-muted-foreground">
-                Complete your profile to get access to 62 Crepusculo events
+                Complete your profile to get access to Crepusculo events
               </p>
             )}
           </div>

@@ -23,7 +23,6 @@ import {
 } from '@/components/ui/card';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from '@/hooks/use-toast';
-import logo from '@/assets/logo_new.png';
 
 const resetPasswordSchema = z
   .object({
@@ -143,7 +142,7 @@ export function ResetPassword() {
         <div className="mb-8 text-center">
           <img
             src={logo}
-            alt="62 Crepusculo"
+            alt="Crepusculo"
             className="mx-auto h-16 w-auto mb-6"
           />
         </div>

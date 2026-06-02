@@ -48,11 +48,11 @@ export function YourPass({ profile }: YourPassProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle className="text-center">Your 62 Crepusculo Pass</CardTitle>
+        <CardTitle className="text-center">Your Crepusculo Pass</CardTitle>
         <div className="flex justify-center gap-2 flex-wrap">
           {profile.status === 'approved' && (
             <Badge variant="secondary" className="bg-green-100 text-green-800">
-              62 verified
+              Crepusculo verified
             </Badge>
           )}
           {visibleTags.map((tag) => (
@@ -105,7 +105,7 @@ export function YourPass({ profile }: YourPassProps) {
           <div className="bg-muted rounded-lg p-4 text-sm">
             <h4 className="font-medium mb-2">Event Guidelines:</h4>
             <p className="text-muted-foreground">
-              Remember to follow the 62|Crepusculo Rules at all times. Your pass
+              Remember to follow the Crepusculo Rules at all times. Your pass
               is personal and non-transferable.
             </p>
           </div>
