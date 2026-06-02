@@ -7,6 +7,7 @@ import { CodeOfConduct } from '@/pages/CodeOfConduct';
 import { ConductQuiz } from '@/pages/ConductQuiz';
 import { Profile } from '@/pages/Profile';
 import { useUserFlow } from '@/hooks/useUserFlow';
+import logo from '@/assets/logo_new.png';
 import './Index.css';
 
 const Index = () => {
@@ -81,6 +82,15 @@ const Index = () => {
 
         {/* Centered content */}
         <div className="relative z-10 w-full max-w-md px-4">
+          {/* Logo */}
+          <div className="mb-6 text-center">
+            <img
+              src={logo}
+              alt="Crepusculo"
+              className="mx-auto h-16 w-auto mb-4"
+            />
+          </div>
+
           {/* Auth Form */}
           <AuthForm
             mode={authMode}
