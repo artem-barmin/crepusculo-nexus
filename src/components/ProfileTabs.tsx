@@ -18,7 +18,7 @@ export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
     >
       <TabsList className="grid w-full grid-cols-1 md:grid-cols-4 h-auto md:h-10">
         <TabsTrigger value="information">Information</TabsTrigger>
-        <TabsTrigger value="conduct">62|Crepusculo Rules</TabsTrigger>
+        <TabsTrigger value="conduct">Crepusculo Rules</TabsTrigger>
         <TabsTrigger
           value="pass"
           disabled={profile.status !== 'approved'}
@@ -35,7 +35,7 @@ export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
             }`}
           >
             {profile.status === 'approved'
-              ? '62 verified'
+              ? 'Crepusculo verified'
               : profile.status === 'rejected'
                 ? 'Not confirmed'
                 : 'Pending'}
@@ -53,7 +53,7 @@ export function ProfileTabs({ profile, setProfile }: ProfileTabsProps) {
       <TabsContent value="conduct" className="mt-6">
         <Card>
           <CardHeader>
-            <CardTitle>62|Crepusculo Rules</CardTitle>
+            <CardTitle>Crepusculo Rules</CardTitle>
             <p className="text-sm text-muted-foreground">
               Our community guidelines and expectations
             </p>
