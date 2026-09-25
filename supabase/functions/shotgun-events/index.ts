@@ -7,6 +7,17 @@ const corsHeaders = {
     "authorization, x-client-info, apikey, content-type",
 };
 
+interface ShotgunApiEvent {
+  name: string;
+  startTime: string;
+  endTime: string;
+  coverThumbnailUrl?: string;
+  url: string;
+  slug: string;
+  description?: string;
+  cancelledAt?: string | null;
+}
+
 const SHOTGUN_ORGANIZER_ID = "197795";
 const SHOTGUN_API_BASE = "https://smartboard-api.shotgun.live/api/shotgun";
 
@@ -16,7 +27,7 @@ Deno.serve(async (req: Request) => {
   }
 
   const authHeader = req.headers.get("Authorization");
-  if (!authHeader) {
+  if (!authHeader?.startsWith("Bearer ")) {
     return new Response(JSON.stringify({ error: "Unauthorized" }), {
       status: 401,
       headers: { ...corsHeaders, "Content-Type": "application/json" },
@@ -28,7 +39,7 @@ Deno.serve(async (req: Request) => {
     Deno.env.get("SUPABASE_SERVICE_ROLE_KEY")!
   );
 
-  const token = authHeader.replace("Bearer ", "");
+  const token = authHeader.slice("Bearer ".length).trim();
   const {
     data: { user },
     error: authError,
@@ -92,9 +103,28 @@ Deno.serve(async (req: Request) => {
   }
 
   const shotgunUrl = `${SHOTGUN_API_BASE}/organizers/${SHOTGUN_ORGANIZER_ID}/events?key=${apiKey}`;
-  const shotgunRes = await fetch(shotgunUrl);
 
-  if (!shotgunRes.ok) {
+  let shotgunData: { data?: ShotgunApiEvent[] };
+  try {
+    const shotgunRes = await fetch(shotgunUrl);
+
+    if (!shotgunRes.ok) {
+      const body = await shotgunRes.text();
+      console.error(
+        `Shotgun API returned ${shotgunRes.status}: ${body.slice(0, 500)}`
+      );
+      return new Response(
+        JSON.stringify({ error: "Failed to fetch events from Shotgun" }),
+        {
+          status: 502,
+          headers: { ...corsHeaders, "Content-Type": "application/json" },
+        }
+      );
+    }
+
+    shotgunData = await shotgunRes.json();
+  } catch (e) {
+    console.error("Shotgun API request failed:", e);
     return new Response(
       JSON.stringify({ error: "Failed to fetch events from Shotgun" }),
       {
@@ -104,33 +134,23 @@ Deno.serve(async (req: Request) => {
     );
   }
 
-  const shotgunData = await shotgunRes.json();
   const events = shotgunData.data || [];
 
   // Filter events by matching codes in description
   const matched = events
-    .filter((e: { description?: string; cancelledAt?: string | null }) => {
+    .filter((e) => {
       if (e.cancelledAt) return false;
       const desc = (e.description || "").toLowerCase();
       return matchCodes.some((code: string) => desc.includes(code));
     })
-    .map(
-      (e: {
-        name: string;
-        startTime: string;
-        endTime: string;
-        coverThumbnailUrl?: string;
-        url: string;
-        slug: string;
-      }) => ({
-        name: e.name,
-        startTime: e.startTime,
-        endTime: e.endTime,
-        coverThumbnailUrl: e.coverThumbnailUrl || null,
-        url: e.url,
-        slug: e.slug,
-      })
-    );
+    .map((e) => ({
+      name: e.name,
+      startTime: e.startTime,
+      endTime: e.endTime,
+      coverThumbnailUrl: e.coverThumbnailUrl || null,
+      url: e.url,
+      slug: e.slug,
+    }));
 
   return new Response(JSON.stringify(matched), {
     headers: { ...corsHeaders, "Content-Type": "application/json" },
