@@ -138,15 +138,6 @@ export function ResetPassword() {
 
       {/* Centered content */}
       <div className="relative z-10 w-full max-w-md px-4">
-        {/* Logo */}
-        <div className="mb-8 text-center">
-          <img
-            src={logo}
-            alt="Crepusculo"
-            className="mx-auto h-16 w-auto mb-6"
-          />
-        </div>
-
         {/* Reset Password Form */}
         <Card className="w-full max-w-md bg-card/80 backdrop-blur-sm border-border/50">
           <CardHeader>
