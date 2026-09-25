@@ -3,6 +3,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { supabase } from '@/integrations/supabase/client';
 import { Profile } from '@/hooks/useProfile';
+import { useIsMobile } from '@/hooks/use-mobile';
 
 interface ShotgunEvent {
   name: string;
@@ -23,6 +24,18 @@ export function TicketsTab({ profile, stubEvents }: TicketsTabProps) {
   const [loading, setLoading] = useState(!stubEvents);
   const [error, setError] = useState<string | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<ShotgunEvent | null>(null);
+  const isMobile = useIsMobile();
+  const showFullscreenEmbed = isMobile && !!selectedEvent;
+
+  // On mobile the embed is fullscreen; lock page scroll so the iframe is the only scroll area
+  useEffect(() => {
+    if (!showFullscreenEmbed) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = previousOverflow;
+    };
+  }, [showFullscreenEmbed]);
 
   useEffect(() => {
     if (stubEvents) return;
@@ -31,9 +44,8 @@ export function TicketsTab({ profile, stubEvents }: TicketsTabProps) {
       setLoading(true);
       setError(null);
 
-      const { data, error: fnError } = await supabase.functions.invoke(
-        'shotgun-events'
-      );
+      const { data, error: fnError } =
+        await supabase.functions.invoke('shotgun-events');
 
       if (fnError) {
         setError('Failed to load events');
@@ -98,6 +110,37 @@ export function TicketsTab({ profile, stubEvents }: TicketsTabProps) {
           </div>
         </CardContent>
       </Card>
+    );
+  }
+
+  if (selectedEvent && isMobile) {
+    return (
+      <div
+        className="fixed inset-0 z-50 flex flex-col bg-background"
+        style={{ height: '100dvh' }}
+      >
+        <div className="shrink-0 flex items-center gap-2 border-b px-2 py-2 pt-[max(0.5rem,env(safe-area-inset-top))]">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => setSelectedEvent(null)}
+          >
+            &larr; Back
+          </Button>
+          <div className="min-w-0">
+            <p className="truncate font-semibold">{selectedEvent.name}</p>
+            <p className="truncate text-xs text-muted-foreground">
+              {formatDate(selectedEvent.startTime)}
+            </p>
+          </div>
+        </div>
+        <iframe
+          src={`https://shotgun.live/events/${selectedEvent.slug}?embedded=1`}
+          className="w-full flex-1 border-0"
+          allow="payment"
+          title={selectedEvent.name}
+        />
+      </div>
     );
   }
 
